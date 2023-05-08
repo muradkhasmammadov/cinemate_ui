@@ -35,7 +35,7 @@
           <div class="footer-content">
             <div class="footer-section">
               <h4>About CineMate</h4>
-              <p>CineMate is the world's most popular and authoritative source for movie, TV, and celebrity content.</p>
+              <p>CineMate is the world's most populars and authoritative source for movie, TV, and celebrity content.</p>
             </div>
             <div class="footer-section">
               <h4>Quick Links</h4>
@@ -70,7 +70,7 @@ export default {
     return {
       isLoggedIn: false,
       userRole: null,
-      id: null
+      user_id: ''
     };
   },
   created() {
@@ -84,16 +84,16 @@ export default {
         if (decodedToken.exp * 1000 > Date.now()) {
           this.isLoggedIn = true;
           this.userRole = decodedToken.role;
-          this.id = decodedToken.id;
+          this.user_id = decodedToken.user_id;
         } else {
           this.isLoggedIn = false;
           this.userRole = null;
-          this.id = null;
+          this.user_id = null;
         }
       } else {
         this.isLoggedIn = false;
         this.userRole = null;
-        this.id = null;
+        this.user_id = null;
       }
     },
     Logout() {
@@ -108,7 +108,7 @@ export default {
   },
   computed: {
   watchlistRoute() {
-    return `/watchlist/${this.id}`;
+    return `/watchlist/${this.user_id}`;
   },
 },
 
