@@ -36,8 +36,8 @@ export default {
             location.assign("/");
     },
 
-  checkRoles: function(roles) {
-      return auth.hasAnyOf(roles);
+  checkRoles: function(role) {
+      return auth.hasAnyOf(role);
     }
   },  
   mounted() {

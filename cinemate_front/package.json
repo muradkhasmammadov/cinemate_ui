@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start":"npm run serve",
     "server-api-gateway-package": "mvn -f server/api-gateway-jwt-vue/pom.xml package",
     "server-api-gateway": "java -jar -Xdebug -Xrunjdwp:server=y,transport=dt_socket,suspend=n server/api-gateway/target/api-gateway-1.0-SNAPSHOT.jar",
     "serve": "vue-cli-service serve",

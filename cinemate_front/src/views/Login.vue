@@ -46,7 +46,7 @@ async LogIn() {
         {
         // decoding the jwt and save it in the decodedToken variable
         this.decodedToken = jwt_decode(this.token);
-        // saving the returned user role into the roles variable
+        // saving the returned user role into the role variable
         this.role = this.decodedToken.role
         // saving the token into the windows local storage 
         localStorage.setItem('jwtToken',  this.token);
