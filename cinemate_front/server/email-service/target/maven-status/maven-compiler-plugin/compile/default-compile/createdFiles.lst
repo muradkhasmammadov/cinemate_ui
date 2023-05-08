@@ -1,8 +1,0 @@
-com\esiproject2023\emailservice\dto\EmailDto$EmailDtoBuilder.class
-com\esiproject2023\emailservice\EmailServiceApplication.class
-com\esiproject2023\emailservice\service\EmailService.class
-com\esiproject2023\emailservice\controller\EmailController.class
-com\esiproject2023\emailservice\dto\EmailDto.class
-com\esiproject2023\emailservice\model\Email.class
-com\esiproject2023\emailservice\model\Email$EmailBuilder.class
-com\esiproject2023\emailservice\repository\EmailRepository.class
