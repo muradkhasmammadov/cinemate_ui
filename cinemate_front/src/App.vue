@@ -1,13 +1,12 @@
 <template>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
 
-
-     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <div class="logo-container">
         <a href="#" class="navbar-brand">
-          <img src="https://www.clipartmax.com/png/middle/1-10021_clipart-movies-hd-movies-logo-transparent.png" class="logo" alt="CineMate">
+          <img src="https://www.clipartmax.com/png/middle/1-10021_clipart-movies-hd-movies-logo-transparent.png" class="logo" alt="CineMate" />
         </a>
       </div>
       <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -22,55 +21,55 @@
         <div class="navbar-nav ms-auto">
           <router-link v-if="!isLoggedIn" to="/auth/register" class="nav-item nav-link">Sign Up</router-link>
           <router-link v-if="!isLoggedIn" to="/auth/login" class="nav-item nav-link">Login</router-link>
-          <button v-if = "isLoggedIn" @click="Logout" class="center">Logout</button>
+          <button v-if="isLoggedIn" @click="Logout" class="center">Logout</button>
         </div>
       </div>
     </div>
   </nav>
-  <router-view/>
+  <router-view />
 
- <footer class="mt-5">
-      <div class="footer">
-        <div class="container">
-          <div class="footer-content">
-            <div class="footer-section">
-              <h4>About CineMate</h4>
-              <p>CineMate is the world's most populars and authoritative source for movie, TV, and celebrity content.</p>
-            </div>
-            <div class="footer-section">
-              <h4>Quick Links</h4>
-              <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Metadata</a></li>
-                <li><a href="#">Add Review</a></li>
-                <li><a href="#">All Reviews</a></li>
-                <li><a href="#">Login</a></li>
-              </ul>
-            </div>
-            <div class="footer-section">
-              <h4>Contact Us</h4>
-              <p>Email: info@cinemate.com</p>
-              <p>Phone: +1 (123) 456-7890</p>
-            </div>
+  <footer class="mt-5">
+    <div class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>About CineMate</h4>
+            <p>CineMate is the world's most populars and authoritative source for movie, TV, and celebrity content.</p>
           </div>
-          <div class="footer-bottom">
-            <p>&copy; 2023 CineMate. All rights reserved.</p>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Metadata</a></li>
+              <li><a href="#">Add Review</a></li>
+              <li><a href="#">All Reviews</a></li>
+              <li><a href="#">Login</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Contact Us</h4>
+            <p>Email: info@cinemate.com</p>
+            <p>Phone: +1 (123) 456-7890</p>
           </div>
         </div>
+        <div class="footer-bottom">
+          <p>&copy; 2023 CineMate. All rights reserved.</p>
+        </div>
       </div>
-  </footer>  
+    </div>
+  </footer>
 </template>
 
 <script>
-import jwt_decode from "jwt-decode";
-import auth from "../src/auth";
+import jwt_decode from 'jwt-decode';
+import auth from '../src/auth';
 export default {
-  name: "NavBar",
+  name: 'NavBar',
   data() {
     return {
       isLoggedIn: false,
       userRole: null,
-      user_id: ''
+      user_id: '',
     };
   },
   created() {
@@ -78,13 +77,13 @@ export default {
   },
   methods: {
     checkUserStatus() {
-      const token = localStorage.getItem("jwtToken");
+      const token = localStorage.getItem('jwtToken');
       if (token) {
         const decodedToken = jwt_decode(token);
         if (decodedToken.exp * 1000 > Date.now()) {
           this.isLoggedIn = true;
           this.userRole = decodedToken.role;
-          this.user_id = decodedToken.user_id;
+          this.user_id = decodedToken.sub;
         } else {
           this.isLoggedIn = false;
           this.userRole = null;
@@ -97,8 +96,8 @@ export default {
       }
     },
     Logout() {
-            auth.logout();
-            location.assign("/");
+      auth.logout();
+      location.assign('/');
     },
   },
   watch: {
@@ -107,15 +106,14 @@ export default {
     },
   },
   computed: {
-  watchlistRoute() {
-    return `/watchlist/${this.user_id}`;
+    watchlistRoute() {
+      return `/watchlist/${this.user_id}`;
+    },
   },
-},
-
 };
 </script>
 <style>
- #app {
+#app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -133,10 +131,10 @@ export default {
   height: 60px;
   width: auto;
 }
-.input-group-btn{
-    width: 300px;
+.input-group-btn {
+  width: 300px;
 }
-.navbar-collapse button{
+.navbar-collapse button {
   background: rgb(5, 105, 228);
   border: 0;
   padding: 10px 20px;
@@ -148,12 +146,11 @@ export default {
 }
 
 .footer {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),  url('https://images.purexbox.com/6c4ae5b99340c/imdb-tv-app-arrives-on-xbox-includes-thousands-of-free-movies.large.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.purexbox.com/6c4ae5b99340c/imdb-tv-app-arrives-on-xbox-includes-thousands-of-free-movies.large.jpg');
   background-size: cover;
   background-position: center center;
   color: white;
   padding: 40px 0;
-
 }
 
 .footer h4 {
@@ -189,6 +186,4 @@ export default {
   text-align: center;
   font-size: 14px;
 }
-
-
 </style>

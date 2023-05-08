@@ -119,12 +119,12 @@ const routes = [
       },
 },
 {
-    path: "/watchlist/:id",
+    path: "/watchlist/:user_id",
     name: "watchlist",
     component: watchlist,
     beforeEnter: (to, from, next) => {
         const token = localStorage.getItem("jwtToken");
-    
+        console.log(token)
         if (!token) {
           // If no token found, redirect to the login page
           next("/auth/login");
