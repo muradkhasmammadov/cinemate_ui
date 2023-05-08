@@ -1,15 +1,8 @@
 <template>
 <div class="header">
     <div>
-    <button v-if = "authResult" @click="Logout" class="center">Logout</button>
-
     <div class="name" v-if="checkRoles('ADMIN')">
       <h1> Hello Admin</h1>
-      <h3>  Fetched from protected endpoint "../auth/admin": {{AdminViewContent}} </h3>
-    </div>
-    <div class="name" v-if="checkRoles('USER')">
-      <h1> Hello User</h1>
-      <h3>  Fetched from protected endpoint "../auth/user": {{UserViewContent}} </h3>
     </div>
   
   </div>
@@ -82,18 +75,12 @@ body{
   background: #fafafa;
   position: relative;
 }
-.name{
-  background: rgb(189, 212, 199);
-  margin-bottom: 5px;
-  padding: 3px 5px;
-  border-radius: 10px;
-}
+
 h1{
   margin: 0;
   padding: 0;
   font-family: 'Quicksand', sans-serif;
   color: #444;
-  background: #7e9756;
 }
 p{
   background: #796dbd;

@@ -84,10 +84,35 @@ const routes = [
         component: Login,
     },
     {
-    path: "/review/add",
-    name: "addReview",
-    component: addReview,
-},
+      path: "/review/add",
+      name: "addReview",
+      component: addReview,
+      beforeEnter: (to, from, next) => {
+          const token = localStorage.getItem("jwtToken");
+      
+          if (!token) {
+            // If no token found, redirect to the login page
+            next("/auth/login");
+          } else {
+            // If token is found, check if it is valid and has the ADMIN role
+            try {
+              const decodedToken = jwt_decode(token);
+      
+              if (decodedToken.role && decodedToken.role.includes("USER")) {
+                next(); // Proceed to the AllReviews component if the user is an admin
+              } else {
+                next("/"); // Redirect to the homepage or any other page if the user is not an admin
+                alert("Admin cannot add review");
+  
+              }
+            } catch (error) {
+              console.log("Invalid token", error);
+              localStorage.removeItem("jwtToken"); // Remove the invalid token
+              next("/auth/login"); // Redirect to the login page
+            }
+          }
+        },
+  },
 {
     path: "/review/all",
     name: "allReview",
@@ -107,7 +132,7 @@ const routes = [
               next(); // Proceed to the AllReviews component if the user is an admin
             } else {
               next("/"); // Redirect to the homepage or any other page if the user is not an admin
-              alert("User is not admin");
+              alert("Only admins can see reviews");
 
             }
           } catch (error) {
@@ -126,17 +151,15 @@ const routes = [
         const token = localStorage.getItem("jwtToken");
         console.log(token)
         if (!token) {
-          // If no token found, redirect to the login page
           next("/auth/login");
         } else {
-          // If token is found, check if it is valid and has the ADMIN role
           try {
             const decodedToken = jwt_decode(token);
     
             if (decodedToken.role && decodedToken.role.includes("USER")) {
               next(); 
             } else {
-              next("/"); // Redirect to the homepage or any other page if the user is not an admin
+              next("/"); 
               alert("User is not admin");
 
             }
@@ -162,6 +185,11 @@ const routes = [
     path: "/metadata/searchByIDs/:id",
     name: "searchByID",
     component: searchByID,
+},
+{
+  path: "/review/delete/:id",
+  name: "deleteReview",
+  component: allReview,
 },
 
 

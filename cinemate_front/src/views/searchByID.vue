@@ -16,7 +16,9 @@
                     <h6 class="card-subtitle mb-2">{{ metadata.genre }}</h6>
                     <p class="card-text card-genre"> <i class="fa fa-star"></i> {{ metadata.rating }}</p>
                     <button type="button" class="btn btn-watchlist"><i class="fa fa-plus"></i> Watchlist</button> <br>
-                    <button type="button" class="btn btn-add-review">Add Review</button> 
+                    <a href="/review/add">
+                      <button type="button" class="btn btn-add-review" >Add Review</button> 
+                    </a>
                   </div>
                   <ul class="list-group list-group-flush">
                   <li class="list-group-item"> {{metadata.director}} </li>

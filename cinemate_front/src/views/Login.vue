@@ -59,6 +59,7 @@ export default {
       } catch (e) {
         console.log(e);
         console.log("error");
+        alert("User doesn't exist!")
       }
     },
   },

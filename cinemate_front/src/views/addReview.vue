@@ -4,12 +4,12 @@
     <div class="col-md-6">
     <h1>Add New Review</h1>
       <div class="form-group">
-        <!-- <label for="formGroupExampleInput">Example label</label>    -->
-        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Content" required v-model="review.userId"> 
+        <!-- <label for="formGroupExampleInput">Example label</label>   ` -->
+        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Content" required v-model="review.user_id" readonly> 
       </div>
       <div class="form-group">
         <!-- <label for="formGroupExampleInput2">Another label</label> -->
-        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Content" required v-model="review.contentId">
+        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Content" required v-model="review.content_id" readonly>
       </div>
       <div class="form-group">
         <!-- <label for="formGroupExampleInput2">Another label</label> -->
@@ -29,14 +29,15 @@
 
 <script>
 import axios from 'axios'
+import jwt_decode from "jwt-decode";
 
 export default {
   name: "AddReview",
   data() {
     return {
       review: {
-        userId: 0,
-        contentId: "",
+        user_id: 0,
+        content_id: "",
         body: "",
         score: 0,
       },
@@ -46,8 +47,8 @@ export default {
   methods: {
     addReview() {
       var data = {
-        userId: this.review.userId,
-        contentId: this.review.contentId,
+        user_id: this.review.user_id,
+        content_id: this.review.content_id,
         body: this.review.body,
         score: this.review.score,
       };  
@@ -64,6 +65,26 @@ export default {
     },
     
   },
+  created() {
+  // Set content_id based on the route parameter
+  if (this.$route.params.id) {
+    this.review.content_id = this.$route.params.id;
+  }
+  
+  // Get the user_id from the JWT token
+  const token = localStorage.getItem("jwtToken");
+  if (token) {
+    const decodedToken = jwt_decode(token);
+    if (decodedToken.exp * 1000 > Date.now()) {
+      this.review.user_id = decodedToken.user_id;
+    } else {
+      this.$router.push("/auth/login");
+    }
+  } else {
+    this.$router.push("/auth/login");
+  }
+},
+
   
 };
 </script>

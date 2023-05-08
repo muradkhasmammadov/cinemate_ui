@@ -77,24 +77,25 @@ export default {
   },
   methods: {
     checkUserStatus() {
-      const token = localStorage.getItem('jwtToken');
-      if (token) {
-        const decodedToken = jwt_decode(token);
-        if (decodedToken.exp * 1000 > Date.now()) {
-          this.isLoggedIn = true;
-          this.userRole = decodedToken.role;
-          this.user_id = decodedToken.sub;
-        } else {
-          this.isLoggedIn = false;
-          this.userRole = null;
-          this.user_id = null;
-        }
+    const token = localStorage.getItem("jwtToken");
+    if (token) {
+      const decodedToken = jwt_decode(token);
+      console.log('Decoded token:', decodedToken); // Add this line to log the decoded token
+      if (decodedToken.exp * 1000 > Date.now()) {
+        this.isLoggedIn = true;
+        this.userRole = decodedToken.role;
+        this.user_id = decodedToken.user_id;
       } else {
         this.isLoggedIn = false;
         this.userRole = null;
         this.user_id = null;
       }
-    },
+    } else {
+      this.isLoggedIn = false;
+      this.userRole = null;
+      this.user_id = null;
+    }
+  },
     Logout() {
       auth.logout();
       location.assign('/');

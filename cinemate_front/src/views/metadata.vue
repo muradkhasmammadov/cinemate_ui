@@ -1,5 +1,4 @@
 <template>
-
    <section class="movies-section">
   <div class="container">
     <h1>Explore Movies</h1>

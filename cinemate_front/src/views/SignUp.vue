@@ -52,6 +52,15 @@
     <input type="date" name="dob" required v-model="dob" />
     <label for="minRating" class="mt-4">Minimum rating</label>
     <input type="number" min="0" max="9" name="minRating" required v-model="minRating"  placeholder="Choose rating between 0-9"/>
+    <label for="minRating" class="mt-4">Minimum rating</label>
+    <select name="emailPreferences" required v-model="emailPreferences">
+    <option value="" disabled>Choose your email preferences</option>
+    <option value="daily">daily</option>
+    <option value="weekly">weekly</option>
+    <option value="monthly">monthly</option>
+    <option value="twicePerWeek">twicePerWeek</option>
+    <option value="thricePerWeek">thricePerWeek</option>
+    </select>
     <button @click="SignUp" class="SignUp">SignUp</button>
   </div>
 </template>
@@ -70,7 +79,8 @@ export default {
       role: '',
       favGenre: '',
       dob: '',
-      minRating: ''
+      minRating: '',
+      emailPreferences: '',
     };
   },
   methods: {
@@ -84,6 +94,7 @@ export default {
         favGenre: this.favGenre,
         dob: this.dob,
         minRating: this.minRating,
+        emailPreferences: this.emailPreferences,
       };
       // console.log('CSRF TOKEN: ', document.cookie.match(new RegExp(`XSRF-TOKEN=([^;]+)`)));
 
@@ -107,6 +118,7 @@ export default {
             favGenre: this.favGenre,
             dob: this.dob,
             minRating: this.minRating,
+            emailPreferences: this.emailPreferences,
           },
           headers
         )
