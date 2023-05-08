@@ -46,6 +46,7 @@ export default {
         .then((response) => this.reviews = response.data)
         // .then((data) => (this.reviews = data))
         .catch((err) => console.log(err.message));
+        // alert('An error occurred while adding the review. Please try again.');
     },
   },
   mounted() {

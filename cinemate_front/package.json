@@ -3,16 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "server-api-gateway-package": "mvn -f server/api-gateway-jwt-vue/pom.xml package",
+    "server-api-gateway": "java -jar -Xdebug -Xrunjdwp:server=y,transport=dt_socket,suspend=n server/api-gateway/target/api-gateway-1.0-SNAPSHOT.jar",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@userfront/core": "^0.5.8",
+    "auth": "^0.0.9",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
+    "jwt-decode": "^3.1.2",
+    "sccs": "^0.4.2",
     "vue": "^3.2.13",
     "vue-router": "^4.1.6"
   },

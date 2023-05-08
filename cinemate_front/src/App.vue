@@ -19,12 +19,44 @@
                 <router-link class="nav-item nav-link active" to="/review/all">All Reviews</router-link>
             </div>
             <div class="navbar-nav ms-auto">
-                <router-link to="/review/all" class="nav-item nav-link">Login</router-link>
+                <router-link to="/auth/register" class="nav-item nav-link">Sign Up</router-link>
+                <router-link to="/auth/login" class="nav-item nav-link">Login</router-link>
             </div>
         </div>
     </div>
 </nav>
   <router-view/>
+
+ <footer class="mt-5">
+      <div class="footer">
+        <div class="container">
+          <div class="footer-content">
+            <div class="footer-section">
+              <h4>About CineMate</h4>
+              <p>CineMate is the world's most popular and authoritative source for movie, TV, and celebrity content.</p>
+            </div>
+            <div class="footer-section">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Metadata</a></li>
+                <li><a href="#">Add Review</a></li>
+                <li><a href="#">All Reviews</a></li>
+                <li><a href="#">Login</a></li>
+              </ul>
+            </div>
+            <div class="footer-section">
+              <h4>Contact Us</h4>
+              <p>Email: info@cinemate.com</p>
+              <p>Phone: +1 (123) 456-7890</p>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>&copy; 2023 CineMate. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+  </footer>  
 </template>
 
 
@@ -50,4 +82,50 @@
 .input-group-btn{
     width: 300px;
 }
+
+
+.footer {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),  url('https://images.purexbox.com/6c4ae5b99340c/imdb-tv-app-arrives-on-xbox-includes-thousands-of-free-movies.large.jpg');
+  background-size: cover;
+  background-position: center center;
+  color: white;
+  padding: 40px 0;
+
+}
+
+.footer h4 {
+  margin-bottom: 15px;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin-bottom: 20px;
+}
+
+.footer-section {
+  margin-bottom: 20px;
+}
+
+.footer-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer-section ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+  color: #ffc107;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 14px;
+}
+
+
 </style>

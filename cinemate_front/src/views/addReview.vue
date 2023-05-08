@@ -1,5 +1,5 @@
 <template>
-  <div class="form">
+  <!-- <div class="form">
     <h3>Add a Review</h3>
 
     <label for="userId">UserId: </label>
@@ -15,7 +15,34 @@
     <input contentId="score"  type="number" id="score" required v-model="review.score"/>
 
     <button @click="addReview" class="addPost">Add Review</button>
+  </div> -->
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6">
+    <h1>Add New Review</h1>
+      <div class="form-group">
+        <!-- <label for="formGroupExampleInput">Example label</label>    -->
+        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Content" required v-model="review.userId"> 
+      </div>
+      <div class="form-group">
+        <!-- <label for="formGroupExampleInput2">Another label</label> -->
+        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Content" required v-model="review.contentId">
+      </div>
+      <div class="form-group">
+        <!-- <label for="formGroupExampleInput2">Another label</label> -->
+        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Your Feedback" required v-model="review.body">
+      </div>
+      <div class="form-group">
+        <!-- <label for="formGroupExampleInput2">Another label</label> -->
+        <input type="number" class="form-control" id="formGroupExampleInput2" placeholder="Rate" required v-model="review.score">
+      </div>
+      <a href="/review/all">
+        <input type="submit" class="btn btn-primary mt-3" @click="addReview" value="Add Review">
+      </a>
+    </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -29,16 +56,11 @@ export default {
         userId: 0,
         contentId: "",
         body: "",
-        score: 0.0,
+        score: 0,
       },
       // review: null,
     }
   },
-  // mounted () {
-  //   axios
-  //     .get('http://localhost:8080/review/all')
-  //     .then(response => (this.review = response.data))
-  // },
   methods: {
     addReview() {
       var data = {
@@ -47,16 +69,15 @@ export default {
         body: this.review.body,
         score: this.review.score,
       };  
-      // using Fetch - post method - send an HTTP post request to the specified URI with the defined body
       axios.post('/review/add', data)
       .then((response) => {
         console.log(response.data);
-        // redirect to /allposts view
         this.$router.push("/review/all");
       })
       .catch((e) => {
         console.log(e);
         console.log("error");
+        // alert('An error occurred while adding the review. Please try again.');
       });
     },
     
@@ -66,44 +87,15 @@ export default {
 </script>
 
 <style scoped>
-.form {
-  max-width: 420px;
-  margin: 30px auto;
-  background: rgb(167, 154, 154);
-  text-align: left;
-  padding: 40px;
-  border-radius: 10px;
+.container{
+  padding-left: 350px;
 }
-h3 {
-  text-align: center;
-  color: rgb(8, 110, 110);
-}
-label {
-  color: rgb(8, 110, 110);
-  display: inline-block;
-  margin: 25px 0 15px;
-  font-size: 0.8em;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: bold;
-}
-input {
-  display: block;
-  padding: 10px 6px;
-  width: 100%;
-  box-sizing: border-box;
-  border: none;
-  border-bottom: 1px solid white;
-  color: blue;
-}
-button {
-  background: rgb(8, 110, 110);
-  border: 0;
-  padding: 10px 20px;
+.container input{
+  float: left;
   margin-top: 20px;
-  color: white;
-  border-radius: 20px;
-  align-items: center;
-  text-align: center;
+}
+
+.form-group input{
+  border: 0.5px solid gray;
 }
 </style>

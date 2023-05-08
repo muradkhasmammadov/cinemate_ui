@@ -1,0 +1,8 @@
+com\esiproject2023\reviewservice\controller\ReviewController.class
+com\esiproject2023\reviewservice\dto\ReviewDto.class
+com\esiproject2023\reviewservice\repository\ReviewRepository.class
+com\esiproject2023\reviewservice\dto\ReviewDto$ReviewDtoBuilder.class
+com\esiproject2023\reviewservice\model\Review.class
+com\esiproject2023\reviewservice\service\ReviewService.class
+com\esiproject2023\reviewservice\model\Review$ReviewBuilder.class
+com\esiproject2023\reviewservice\ReviewServiceApplication.class

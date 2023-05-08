@@ -1,8 +1,8 @@
 <template>
 
-   <section class="movies-section">
+<section class="movies-section">
   <div class="container">
-    <h1>metadata.genre Movies</h1>
+    <h1>{{ this.$route.params.genreValue }}  Movies</h1>
     <div class="movies-grid">
       <div class="row">
         <div class="col-md-3 my-3" v-for="metadata in metadatas" :key="metadata.id">
@@ -12,7 +12,9 @@
               <h5 class="card-title">{{ truncateTitle(metadata.title) }}</h5>
               <h6 class="card-subtitle mb-2">{{ metadata.genre }}</h6>
               <p class="card-text"> <i class="fa fa-star"></i> {{ metadata.rating }}</p>
-              <button type="button" class="btn btn-read-more">Read More</button> <br>
+              <a :href=" '/metadata/searchByIDs/' + metadata.id ">
+                <button type="button" class="btn btn-read-more">Read More</button> 
+              </a><br>
               <button type="button" class="btn btn-watchlist"><i class="fa fa-plus"></i> Watchlist</button>
             </div>
             <ul class="list-group list-group-flush">
@@ -24,38 +26,6 @@
     </div>
   </div>
 </section>
-
-  
-  <footer>
-      <div class="footer">
-        <div class="container">
-          <div class="footer-content">
-            <div class="footer-section">
-              <h4>About CineMate</h4>
-              <p>CineMate is the world's most popular and authoritative source for movie, TV, and celebrity content.</p>
-            </div>
-            <div class="footer-section">
-              <h4>Quick Links</h4>
-              <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Metadata</a></li>
-                <li><a href="#">Add Review</a></li>
-                <li><a href="#">All Reviews</a></li>
-                <li><a href="#">Login</a></li>
-              </ul>
-            </div>
-            <div class="footer-section">
-              <h4>Contact Us</h4>
-              <p>Email: info@cinemate.com</p>
-              <p>Phone: +1 (123) 456-7890</p>
-            </div>
-          </div>
-          <div class="footer-bottom">
-            <p>&copy; 2023 CineMate. All rights reserved.</p>
-          </div>
-        </div>
-      </div>
-  </footer>
 </template>
 
 
@@ -71,12 +41,14 @@ export default {
     };
   },
   methods: {
-    fetchMetadata(genre) {
-      // fetch is a GET request by default unless stated otherwise. Therefore, it will fetch all products from the database
-    axios.get(`/metadata/searchByParams/genre=${genre}&info=custom_info`)
-        .then((response) => this.metadatas = response.data)
-        .catch((err) => console.log(err.message));
-    },
+    fetchMetadata() {
+  const genre = this.$route.params.genreValue;
+  axios.get(`/metadata/searchByParams/genre=${genre}&info=custom_info`)
+    .then((response) => this.metadatas = response.data)
+    .catch((err) => console.log(err.message));
+    // alert('An error occurred while adding the review. Please try again.');
+},
+
     truncateTitle(title){
       return title.length > 20 ? title.slice(0, 20) + '...' : title;
     },

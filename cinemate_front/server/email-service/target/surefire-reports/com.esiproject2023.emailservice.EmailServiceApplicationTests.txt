@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.esiproject2023.emailservice.EmailServiceApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.415 s - in com.esiproject2023.emailservice.EmailServiceApplicationTests
