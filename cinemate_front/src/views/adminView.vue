@@ -1,6 +1,8 @@
 <template>
 <div class="header">
     <div>
+    <button v-if = "authResult" @click="Logout" class="center">Logout</button>
+
     <div class="name" v-if="checkRoles('ADMIN')">
       <h1> Hello Admin</h1>
       <h3>  Fetched from protected endpoint "../auth/admin": {{AdminViewContent}} </h3>
@@ -29,6 +31,10 @@ export default {
   }
   },
   methods: {
+  Logout() {
+            auth.logout();
+            location.assign("/");
+    },
 
   checkRoles: function(role) {
       return auth.hasAnyOf(role);

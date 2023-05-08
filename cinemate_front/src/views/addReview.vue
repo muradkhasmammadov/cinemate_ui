@@ -1,22 +1,4 @@
 <template>
-  <!-- <div class="form">
-    <h3>Add a Review</h3>
-
-    <label for="userId">UserId: </label>
-    <input contentId="userId" type="text" id="userId" required v-model="review.userId" />
-
-    <label for="contentId">ContentId: </label>
-    <input contentId="contentId" type="text" id="contentId" required v-model="review.contentId" />
-
-    <label for="body">Body: </label>
-    <input contentId="body"  type="text" id="body" required v-model="review.body"/>
-
-    <label for="score">Score: </label>
-    <input contentId="score"  type="number" id="score" required v-model="review.score"/>
-
-    <button @click="addReview" class="addPost">Add Review</button>
-  </div> -->
-
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-6">

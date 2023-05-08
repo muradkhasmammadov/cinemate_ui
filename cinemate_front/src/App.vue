@@ -1,30 +1,32 @@
 <template>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <div class="logo-container">
-          <a href="#" class="navbar-brand">
-              <img src="https://www.clipartmax.com/png/middle/1-10021_clipart-movies-hd-movies-logo-transparent.png" class="logo" alt="CineMate">
-          </a>
+      <div class="logo-container">
+        <a href="#" class="navbar-brand">
+          <img src="https://www.clipartmax.com/png/middle/1-10021_clipart-movies-hd-movies-logo-transparent.png" class="logo" alt="CineMate">
+        </a>
+      </div>
+      <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav">
+          <router-link class="nav-item nav-link active" to="/metadata/search">Home</router-link>
+          <router-link v-if="isLoggedIn && userRole === 'USER'" class="nav-item nav-link active" :to="watchlistRoute">My Watchlist</router-link>
+          <router-link v-if="isLoggedIn && userRole === 'ADMIN'" class="nav-item nav-link active" to="/review/all">All Reviews</router-link>
         </div>
-        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav">
-                <router-link class="nav-item nav-link active" to="/metadata/search">Home</router-link>
-                <router-link class="nav-item nav-link active" to="/metadata/search">Metadata</router-link>
-                <router-link class="nav-item nav-link active" to="/review/add">Add Review </router-link>
-                <router-link class="nav-item nav-link active" to="/review/all">All Reviews</router-link>
-            </div>
-            <div class="navbar-nav ms-auto">
-                <router-link to="/auth/register" class="nav-item nav-link">Sign Up</router-link>
-                <router-link to="/auth/login" class="nav-item nav-link">Login</router-link>
-            </div>
+        <div class="navbar-nav ms-auto">
+          <router-link v-if="!isLoggedIn" to="/auth/register" class="nav-item nav-link">Sign Up</router-link>
+          <router-link v-if="!isLoggedIn" to="/auth/login" class="nav-item nav-link">Login</router-link>
+          <button v-if = "isLoggedIn" @click="Logout" class="center">Logout</button>
         </div>
+      </div>
     </div>
-</nav>
+  </nav>
   <router-view/>
 
  <footer class="mt-5">
@@ -59,7 +61,59 @@
   </footer>  
 </template>
 
+<script>
+import jwt_decode from "jwt-decode";
+import auth from "../src/auth";
+export default {
+  name: "NavBar",
+  data() {
+    return {
+      isLoggedIn: false,
+      userRole: null,
+      id: null
+    };
+  },
+  created() {
+    this.checkUserStatus();
+  },
+  methods: {
+    checkUserStatus() {
+      const token = localStorage.getItem("jwtToken");
+      if (token) {
+        const decodedToken = jwt_decode(token);
+        if (decodedToken.exp * 1000 > Date.now()) {
+          this.isLoggedIn = true;
+          this.userRole = decodedToken.role;
+          this.id = decodedToken.id;
+        } else {
+          this.isLoggedIn = false;
+          this.userRole = null;
+          this.id = null;
+        }
+      } else {
+        this.isLoggedIn = false;
+        this.userRole = null;
+        this.id = null;
+      }
+    },
+    Logout() {
+            auth.logout();
+            location.assign("/");
+    },
+  },
+  watch: {
+    $route() {
+      this.checkUserStatus();
+    },
+  },
+  computed: {
+  watchlistRoute() {
+    return `/watchlist/${this.id}`;
+  },
+},
 
+};
+</script>
 <style>
  #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -82,7 +136,16 @@
 .input-group-btn{
     width: 300px;
 }
-
+.navbar-collapse button{
+  background: rgb(5, 105, 228);
+  border: 0;
+  padding: 10px 20px;
+  margin: 20px 20px 20px 20px;
+  color: white;
+  border-radius: 6px;
+  align-items: center;
+  text-align: center;
+}
 
 .footer {
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),  url('https://images.purexbox.com/6c4ae5b99340c/imdb-tv-app-arrives-on-xbox-includes-thousands-of-free-movies.large.jpg');

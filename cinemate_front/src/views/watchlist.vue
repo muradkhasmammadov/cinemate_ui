@@ -1,5 +1,5 @@
 <template>
-  <div class="AllReviews">
+  <!-- <div class="AllReviews"> -->
     <div id="reviews-list">
       <h1>All reviews</h1>
       <ul>
@@ -25,7 +25,8 @@
         </div>
       </ul>
     </div>
-  </div>
+  <!-- </div> -->
+  <h1>Watclish</h1>
 </template>
 
 <script>
@@ -33,7 +34,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 
 export default {
-  name: "AllReviews",
+  name: "WatchList",
   data() {
     return {
       reviews: [],
@@ -63,8 +64,9 @@ export default {
       return false;
     },
     fetchReviews() {
+        const userId = this.$route.params.userId;
       axios
-        .get("/review/all")
+        .get("/watchlist/" + userId)
         .then((response) => (this.reviews = response.data))
         .catch((err) => console.log(err.message));
     },
