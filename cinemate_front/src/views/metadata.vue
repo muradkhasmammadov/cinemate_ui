@@ -24,7 +24,7 @@
               <a :href=" '/metadata/searchByIDs/' + metadata.id ">
                 <button type="button" class="btn btn-read-more">Read More</button> 
               </a><br>
-              <button type="button" class="btn btn-watchlist"><i class="fa fa-plus"></i> Watchlist</button>
+              <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)"><i class="fa fa-plus"></i> Watchlist</button>
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item"> {{metadata.director}} </li>
@@ -40,6 +40,8 @@
 
 <script>
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+
 export default {
   name: "AllMetada",
   data() {
@@ -51,11 +53,6 @@ export default {
   },
   methods: {
     fetchMetadatas() {
-      // fetch is a GET request by default unless stated otherwise. Therefore, it will fetch all products from the database
-    // axios.get('/metadata/search')
-    //     .then((response) => this.metadatas = response.data)
-    //     .catch((err) => console.log(err.message));
-    // },
     const query = this.$route.params.genreValue;
     const url = query && query.info
       ? `/metadata/searchByParams?genre=${query}&info=custom_info`
@@ -83,7 +80,37 @@ export default {
       },
     });
   },
-},
+  async addToWatchlist(contentId) {
+          const token = localStorage.getItem("jwtToken");
+          const decodedToken = jwt_decode(token)
+          const userId = decodedToken.id; // Assuming you have stored the user's ID in localStorage
+          console.log(decodedToken.id)
+          // if (!token || !userId) {
+          //   this.$router.push("/auth/login");
+          //   return;
+          // }
+
+          const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          };
+
+          try {
+            axios.post(
+              `http://localhost:8081/watchlist/add`,
+              {
+                userId: userId,
+                contentId: contentId
+              },
+              { headers }
+            );
+          } catch (err) {
+            console.log(err.message);
+            // alert("An error occurred while adding the movie to the watchlist. Please try again.");
+          }
+    },
+
+    },
   mounted() {
     // call fetchProducts() when this element (AllReviews()) mounts 
     this.fetchMetadatas();

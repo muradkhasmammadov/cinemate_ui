@@ -4,24 +4,18 @@
     <div class="col-md-6">
     <h1>Add New Review</h1>
       <div class="form-group">
-        <!-- <label for="formGroupExampleInput">Example label</label>   ` -->
-        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Content" required v-model="review.user_id" readonly> 
+        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Content" required :value="review.userId" readonly> 
       </div>
       <div class="form-group">
-        <!-- <label for="formGroupExampleInput2">Another label</label> -->
-        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Content" required v-model="review.content_id" readonly>
+        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Content" required :value="review.contentId" readonly>
       </div>
       <div class="form-group">
-        <!-- <label for="formGroupExampleInput2">Another label</label> -->
-        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Your Feedback" required v-model="review.body">
+        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Your Feedback" required :value="review.body">
       </div>
       <div class="form-group">
-        <!-- <label for="formGroupExampleInput2">Another label</label> -->
-        <input type="number" class="form-control" id="formGroupExampleInput2" placeholder="Rate" required v-model="review.score">
+        <input type="number" class="form-control" id="formGroupExampleInput2" placeholder="Rate" required :value="review.score">
       </div>
-      <a href="/review/all">
         <input type="submit" class="btn btn-primary mt-3" @click="addReview" value="Add Review">
-      </a>
     </div>
   </div>
 </div>
@@ -36,19 +30,21 @@ export default {
   data() {
     return {
       review: {
-        user_id: 0,
-        content_id: "",
+        userId: 0,
+        contentId: "",
         body: "",
         score: 0,
       },
-      // review: null,
     }
   },
   methods: {
     addReview() {
+      const token = localStorage.getItem("jwtToken");
+      const decodedToken = jwt_decode(token)
+      const userId = decodedToken.id;
       var data = {
-        user_id: this.review.user_id,
-        content_id: this.review.content_id,
+        userId: userId,
+        contentId: this.review.contentId,
         body: this.review.body,
         score: this.review.score,
       };  
@@ -60,15 +56,13 @@ export default {
       .catch((e) => {
         console.log(e);
         console.log("error");
-        // alert('An error occurred while adding the review. Please try again.');
       });
     },
     
   },
   created() {
-  // Set content_id based on the route parameter
   if (this.$route.params.id) {
-    this.review.content_id = this.$route.params.id;
+    this.review.contentId = this.$route.params.id;
   }
   
   // Get the user_id from the JWT token
@@ -76,7 +70,7 @@ export default {
   if (token) {
     const decodedToken = jwt_decode(token);
     if (decodedToken.exp * 1000 > Date.now()) {
-      this.review.user_id = decodedToken.user_id;
+      this.review.userId = decodedToken.id;
     } else {
       this.$router.push("/auth/login");
     }

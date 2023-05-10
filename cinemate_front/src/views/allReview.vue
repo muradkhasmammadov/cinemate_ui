@@ -52,15 +52,15 @@ export default {
     console.log(err.message);
   }
 },
-async deleteReview(id) {
+    async deleteReview(id) {
       try {
         const token = localStorage.getItem("jwtToken");
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
-
-        await axios.delete(`http://localhost:8081/review/delete/${id}`, { headers });
+        console.log(id);
+        axios.delete(`http://localhost:8081/review/delete/${id}`, { headers });
 
         this.reviews = this.reviews.filter((review) => review.id !== id);
       } catch (err) {

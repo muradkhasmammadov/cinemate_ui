@@ -1,9 +1,9 @@
 <template>
     <section class="movies-section">
-      <div class="container" v-for="metadata in metadatas" :key="metadata.id">
+      <div class="container" >
           <h1>{{  }} </h1>
           <div class="movies-grid">
-          <div class="row">
+          <div class="row" v-for="metadata in metadatas" :key="metadata.id"> 
 
               <div class=" col-md-6 my-3" >
                   <img :src="poster(metadata)" class="card-img-top" alt="Movie poster not found"> 
@@ -16,9 +16,6 @@
                     <h6 class="card-subtitle mb-2">{{ metadata.genre }}</h6>
                     <p class="card-text card-genre"> <i class="fa fa-star"></i> {{ metadata.rating }}</p>
                     <button type="button" class="btn btn-watchlist"><i class="fa fa-plus"></i> Watchlist</button> <br>
-                    <a href="/review/add">
-                      <button type="button" class="btn btn-add-review" >Add Review</button> 
-                    </a>
                   </div>
                   <ul class="list-group list-group-flush">
                   <li class="list-group-item"> {{metadata.director}} </li>
@@ -26,8 +23,24 @@
               </div>
               </div>
           </div>
+              <div class="col-md-6" >
+                <h1>Add New Review</h1>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Content" required v-model="review.userId" readonly> 
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Content" required v-model="review.contentId" readonly>
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Your Feedback" required v-model="review.body">
+                  </div>
+                  <div class="form-group">
+                    <input type="number" class="form-control" id="formGroupExampleInput2" placeholder="Rate" required v-model="review.score">
+                  </div>
+                    <input type="submit" class="btn btn-primary mt-3" @click="addReview" value="Add Review">
+                </div>
           </div>
-      </div>
+          </div>
     </section>
     
 </template>
@@ -35,6 +48,8 @@
 
 <script>
 import axios from 'axios';
+import jwt_decode from "jwt-decode";
+
 export default {
   name: "AMetada",
   data() {
@@ -42,7 +57,14 @@ export default {
       metadatas: [],
       ids: '',
       movies: [],
+      review: {
+        userId: 0,
+        contentId: "",
+        body: "",
+        score: 0,
+      },
     };
+    
   },
   methods: {
     fetchMetadata() {
@@ -58,12 +80,57 @@ export default {
     poster(metadata) {
       return metadata.poster === 'not found' ? 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/04174dbc-fe2f-4983-824a-6d80412e917e/de25zez-cffb25c6-278b-4c76-a63e-5a75b6b4892d.png/v1/fill/w_800,h_600,q_80,strp/404_not_found__20th_century_box_style__by_xxneojadenxx_de25zez-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwIiwicGF0aCI6IlwvZlwvMDQxNzRkYmMtZmUyZi00OTgzLTgyNGEtNmQ4MDQxMmU5MTdlXC9kZTI1emV6LWNmZmIyNWM2LTI3OGItNGM3Ni1hNjNlLTVhNzViNmI0ODkyZC5wbmciLCJ3aWR0aCI6Ijw9ODAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.GMT6ZFtK1otxk4cvLolKhpYrWievHzrf64y4N7sP8ZM' : metadata.poster;
     },
+  addReview() {
+      console.log('addReview called')
+      const token = localStorage.getItem("jwtToken");
+      const decodedToken = jwt_decode(token)
+      const userId = decodedToken.sub;
+      const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          };
+      var data = {
+        userId: userId,
+        contentId: this.review.contentId,
+        body: this.review.body,
+        score: this.review.score,
+      };  
+      console.log(data)
+      axios.post('http://localhost:8081/review/add', data, { headers })
+      .then((response) => {
+        console.log(response.data);
+        console.log("success")
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log("error");
+      });
+    },
   },
+
   mounted() {
-    // call fetchProducts() when this element (AllReviews()) mounts 
     this.fetchMetadata();
     console.log("mounted");
   },
+  created() {
+  if (this.$route.params.id) {
+    this.review.contentId = this.$route.params.id;
+  }
+  
+  // Get the user_id from the JWT token
+  const token = localStorage.getItem("jwtToken");
+  if (token) {
+    const decodedToken = jwt_decode(token);
+    if (decodedToken.exp * 1000 > Date.now()) {
+      this.review.userId = decodedToken.id;
+    } else {
+      this.$router.push("/auth/login");
+    }
+  } else {
+    this.$router.push("/auth/login");
+  }
+},
+
 };
 
 </script>
