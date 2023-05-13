@@ -30,43 +30,63 @@
 
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import jwt_decode from "jwt-decode";
-const token = localStorage.getItem("jwtToken");
-const decodedToken = jwt_decode(token)
-const params = decodedToken.params;
 
 export default {
-  name: "AllMetada",
+  name: "DiscoverySection",
   data() {
     return {
       metadatas: [],
-      ids: '',
-      movies: [],
+      isLoggedIn: false,
+      userId: null,
     };
   },
   methods: {
-    fetchMetadata() {
-  axios.get(`/discovery/${params}`)
-    .then((response) => this.metadatas = response.data)
-    .catch((err) => console.log(err.message));
-    // alert('An error occurred while adding the review. Please try again.');
-},
+    poster(movie) {
+      return movie.poster === 'not found' ? 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/04174dbc-fe2f-4983-824a-6d80412e917e/de25zez-cffb25c6-278b-4c76-a63e-5a75b6b4892d.png/v1/fill/w_800,h_600,q_80,strp/404_not_found__20th_century_box_style__by_xxneojadenxx_de25zez-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwIiwicGF0aCI6IlwvZlwvMDQxNzRkYmMtZmUyZi00OTgzLTgyNGEtNmQ4MDQxMmU5MTdlXC9kZTI1emV6LWNmZmIyNWM2LTI3OGItNGM3Ni1hNjNlLTVhNzViNmI0ODkyZC5wbmciLCJ3aWR0aCI6Ijw9ODAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.GMT6ZFtK1otxk4cvLolKhpYrWievHzrf64y4N7sP8ZM' : movie.poster;
+    },
+    truncateTitle(title) {
+      return title.length > 20 ? title.substring(0, 20) + "..." : title;
+    },
+    fetchMetadatas() {
+        const url = `/discovery/${this.params}`
 
-    truncateTitle(title){
-      return title.length > 20 ? title.slice(0, 20) + '...' : title;
-    },
-    poster(metadata) {
-      return metadata.poster === 'not found' ? 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/04174dbc-fe2f-4983-824a-6d80412e917e/de25zez-cffb25c6-278b-4c76-a63e-5a75b6b4892d.png/v1/fill/w_800,h_600,q_80,strp/404_not_found__20th_century_box_style__by_xxneojadenxx_de25zez-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwIiwicGF0aCI6IlwvZlwvMDQxNzRkYmMtZmUyZi00OTgzLTgyNGEtNmQ4MDQxMmU5MTdlXC9kZTI1emV6LWNmZmIyNWM2LTI3OGItNGM3Ni1hNjNlLTVhNzViNmI0ODkyZC5wbmciLCJ3aWR0aCI6Ijw9ODAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.GMT6ZFtK1otxk4cvLolKhpYrWievHzrf64y4N7sP8ZM' : metadata.poster;
-    },
+        axios.get(url)
+            .then((response) => this.metadatas = response.data)
+            .catch((err) => console.log(err.message));
+    }
   },
-  mounted() {
-    // call fetchProducts() when this element (AllReviews()) mounts 
-    this.fetchMetadata();
-    console.log("mounted");
+  async created() {
+    const token = localStorage.getItem("jwtToken");
+    if (token) {
+      const decodedToken = jwt_decode(token);
+      if (decodedToken.exp * 1000 > Date.now()) {
+        this.isLoggedIn = true;
+        this.userId = decodedToken.id;
+        this.sub = decodedToken.sub;
+        this.params = decodedToken.params;
+      }
+    }
+
+    if (this.isLoggedIn) {
+      const token = localStorage.getItem("jwtToken");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      try {
+        const response = await axios.get(`http://localhost:8081/discovery/${this.params}`, {headers});
+        this.metadatas = response.data
+        console.log(response.data)
+        console.log(this.metadatas, "metadatas")
+        console.log(headers)
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
   },
 };
-
 </script>
 
 <style>
