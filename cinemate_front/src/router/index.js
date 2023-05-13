@@ -11,6 +11,7 @@ import auth from "../auth";
 import SignUp from "../views/SignUp.vue"
 import Login from "../views/Login"
 import watchlist from "../views/watchlist"
+import discovery from "../views/discovery"
 import jwt_decode from "jwt-decode";
 
 const routes = [
@@ -170,6 +171,34 @@ const routes = [
           }
         }
       },
+},
+{
+    path: "/discovery/:params",
+    name: "discovery",
+    component: discovery,
+    beforeEnter: (to, from, next) => {
+      const token = localStorage.getItem("jwtToken");
+      console.log(token)
+      if (!token) {
+        next("/auth/login");
+      } else {
+        try {
+          const decodedToken = jwt_decode(token);
+  
+          if (decodedToken.role && decodedToken.role.includes("USER")) {
+            next(); 
+          } else {
+            next("/"); 
+            alert("User is not admin");
+
+          }
+        } catch (error) {
+          console.log("Invalid token", error);
+          localStorage.removeItem("jwtToken"); // Remove the invalid token
+          next("/auth/login"); // Redirect to the login page
+        }
+      }
+    },
 },
 {
     path: "/metadata/search",
