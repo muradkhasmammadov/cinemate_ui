@@ -35,7 +35,7 @@
                     <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Your Feedback" required v-model="review.body">
                   </div>
                   <div class="form-group">
-                    <input type="number" class="form-control" id="formGroupExampleInput2" placeholder="Rate" required v-model="review.score">
+                    <input type="number" class="form-control" id="formGroupExampleInput2" min="1" max="9" placeholder="Rate" required v-model="review.score">
                   </div>
                     <input type="submit" class="btn btn-primary mt-3" @click="addReview" value="Add Review">
                 </div>

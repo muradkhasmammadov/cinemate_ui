@@ -54,7 +54,7 @@ export default {
           };
 
           await axios.delete(
-            `http://localhost:8081/watchlist/${this.userId}/delete/${movieId}`,
+            `http://localhost:8081/watchlist/delete/${this.sub}/${movieId}`,
             { headers }
           );
 
@@ -62,6 +62,7 @@ export default {
           this.movies = this.movies.filter((movie) => movie.id !== movieId);
         } catch (err) {
           console.log(err.message);
+
         }
       }
     },
@@ -73,13 +74,20 @@ export default {
       if (decodedToken.exp * 1000 > Date.now()) {
         this.isLoggedIn = true;
         this.userId = decodedToken.id;
+        this.sub = decodedToken.sub;
       }
     }
 
     if (this.isLoggedIn) {
+      const token = localStorage.getItem("jwtToken");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
       try {
-        const response = await axios.get(`http://localhost:8081/watchlist/${this.userId}`);
+        const response = await axios.get(`http://localhost:8081/watchlist/get/${this.sub}`, {headers});
         this.movies = response.data;
+        console.log(headers)
       } catch (err) {
         console.log(err.message);
       }

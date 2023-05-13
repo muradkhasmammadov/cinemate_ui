@@ -144,7 +144,7 @@ const routes = [
       },
 },
 {
-    path: "/watchlist/:user_id",
+    path: "/watchlist/get/:sub",
     name: "watchlist",
     component: watchlist,
     beforeEnter: (to, from, next) => {

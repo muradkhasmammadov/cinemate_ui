@@ -85,15 +85,18 @@ export default {
         this.isLoggedIn = true;
         this.userRole = decodedToken.role;
         this.user_id = decodedToken.user_id;
+        this.sub = decodedToken.sub;
       } else {
         this.isLoggedIn = false;
         this.userRole = null;
         this.user_id = null;
+        this.sub = null;
       }
     } else {
       this.isLoggedIn = false;
       this.userRole = null;
       this.user_id = null;
+      this.sub = null;
     }
   },
     Logout() {
@@ -108,7 +111,7 @@ export default {
   },
   computed: {
     watchlistRoute() {
-      return `/watchlist/${this.user_id}`;
+      return `/watchlist/get/${this.sub}`;
     },
   },
 };

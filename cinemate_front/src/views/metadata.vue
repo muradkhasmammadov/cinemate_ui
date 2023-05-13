@@ -24,7 +24,7 @@
               <a :href=" '/metadata/searchByIDs/' + metadata.id ">
                 <button type="button" class="btn btn-read-more">Read More</button> 
               </a><br>
-              <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)"><i class="fa fa-plus"></i> Watchlist</button>
+              <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)" :disabled="isInWatchlist(metadata.id)" ><i class="fa fa-plus"></i> Watchlist</button>
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item"> {{metadata.director}} </li>
@@ -49,6 +49,7 @@ export default {
       metadatas: [],
       ids: '',
       movies: [],
+      watchlistIds: []
     };
   },
   methods: {
@@ -84,11 +85,12 @@ export default {
           const token = localStorage.getItem("jwtToken");
           const decodedToken = jwt_decode(token)
           const userId = decodedToken.id; // Assuming you have stored the user's ID in localStorage
+          const sub = decodedToken.sub; // Assuming you have stored the user's ID in localStorage
           console.log(decodedToken.id)
-          // if (!token || !userId) {
-          //   this.$router.push("/auth/login");
-          //   return;
-          // }
+          if (!token || !userId) {
+            this.$router.push("/auth/login");
+            return;
+          }
 
           const headers = {
             "Content-Type": "application/json",
@@ -99,16 +101,21 @@ export default {
             axios.post(
               `http://localhost:8081/watchlist/add`,
               {
-                userId: userId,
+                userId: sub,
                 contentId: contentId
               },
               { headers }
             );
+            this.watchlistIds.push(contentId);
           } catch (err) {
             console.log(err.message);
             // alert("An error occurred while adding the movie to the watchlist. Please try again.");
           }
     },
+    isInWatchlist(contentId) {
+  return this.watchlistIds.includes(contentId);
+},
+
 
     },
   mounted() {

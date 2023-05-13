@@ -52,7 +52,7 @@
     <input type="date" name="dob" required v-model="dob" />
     <label for="minRating" class="mt-4">Minimum rating</label>
     <input type="number" min="0" max="9" name="minRating" required v-model="minRating"  placeholder="Choose rating between 0-9"/>
-    <label for="minRating" class="mt-4">Minimum rating</label>
+    <label for="minRating" class="mt-4">Email preferences</label>
     <select name="emailPreferences" required v-model="emailPreferences">
     <option value="" disabled>Choose your email preferences</option>
     <option value="daily">daily</option>
