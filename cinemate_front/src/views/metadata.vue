@@ -24,7 +24,7 @@
               <a :href=" '/metadata/searchByIDs/' + metadata.id ">
                 <button type="button" class="btn btn-read-more">Read More</button> 
               </a><br>
-              <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)" :disabled="isInWatchlist(metadata.id)" ><i class="fa fa-plus"></i> Watchlist</button>
+                <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)" v-if="!isInWatchlist(metadata.id)"><i class="fa fa-plus"></i> Watchlist</button>
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item"> {{metadata.director}} </li>
@@ -212,6 +212,10 @@ body {
   padding: 5px 10px;
   font-size: 14px;
 }
+.btn-watchlist-invisible {
+  display: none;
+}
+
 .btn-read-more {
   background-color: #5799ef!important;
   width: 150px;

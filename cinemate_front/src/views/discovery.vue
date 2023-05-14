@@ -15,7 +15,7 @@
               <a :href=" '/metadata/searchByIDs/' + metadata.id ">
                 <button type="button" class="btn btn-read-more">Read More</button> 
               </a><br>
-              <button type="button" class="btn btn-watchlist"><i class="fa fa-plus"></i> Watchlist</button>
+              <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)" v-if="!isInWatchlist(metadata.id)"><i class="fa fa-plus"></i> Watchlist</button>
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item"> {{metadata.director}} </li>
@@ -40,6 +40,7 @@ export default {
       metadatas: [],
       isLoggedIn: false,
       userId: null,
+      watchlistIds: []
     };
   },
   methods: {
@@ -55,7 +56,42 @@ export default {
         axios.get(url)
             .then((response) => this.metadatas = response.data)
             .catch((err) => console.log(err.message));
-    }
+    },
+    async addToWatchlist(contentId) {
+          const token = localStorage.getItem("jwtToken");
+          const decodedToken = jwt_decode(token)
+          const userId = decodedToken.id; // Assuming you have stored the user's ID in localStorage
+          const sub = decodedToken.sub; // Assuming you have stored the user's ID in localStorage
+          console.log(decodedToken.id)
+          if (!token || !userId) {
+            this.$router.push("/auth/login");
+            return;
+          }
+
+          const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          };
+
+          try {
+            axios.post(
+              `http://localhost:8081/watchlist/add`,
+              {
+                userId: sub,
+                contentId: contentId
+              },
+              { headers }
+            );
+            this.watchlistIds.push(contentId);
+          } catch (err) {
+            console.log(err.message);
+            // alert("An error occurred while adding the movie to the watchlist. Please try again.");
+          }
+    },
+    isInWatchlist(contentId) {
+  return this.watchlistIds.includes(contentId);
+},
+
   },
   async created() {
     const token = localStorage.getItem("jwtToken");
@@ -90,6 +126,7 @@ export default {
 </script>
 
 <style>
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -236,6 +273,4 @@ body {
   text-align: center;
   font-size: 14px;
 }
-
-
 </style>

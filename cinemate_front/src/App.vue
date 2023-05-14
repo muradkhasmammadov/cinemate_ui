@@ -30,7 +30,7 @@
   <router-view />
 
   <footer class="mt-5">
-    <div class="footer">
+    <div class="footer mt-5">
       <div class="container">
         <div class="footer-content">
           <div class="footer-section">
@@ -153,7 +153,7 @@ export default {
   text-align: center;
 }
 
-.footer {
+footer {
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.purexbox.com/6c4ae5b99340c/imdb-tv-app-arrives-on-xbox-includes-thousands-of-free-movies.large.jpg');
   background-size: cover;
   background-position: center center;
