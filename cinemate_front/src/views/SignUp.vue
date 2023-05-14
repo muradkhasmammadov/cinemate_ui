@@ -9,42 +9,10 @@
     <input type="email" name="email" required v-model="email" />
     <label for="password" class="mt-4">Password</label>
     <input type="password" name="password" required v-model="password" />
-    <label for="role" class="mt-4">Role</label><br>
-    <select name="role" required v-model="role"> 
-      <!-- <option value="" disabled>Choose your role</option> -->
-      <option value="USER" selected>USER</option>
-    </select> <br>
     <label for="favGenre" class="mt-4">Favorite Genre</label><br>
    <select name="favGenre" required v-model="favGenre">
     <option value="" disabled>Choose your favorite genre</option>
-    <option value="Action">Action</option>
-    <option value="Adult">Adult</option>
-    <option value="Adventure">Adventure</option>
-    <option value="Animation">Animation</option>
-    <option value="Biography">Biography</option>
-    <option value="Comedy">Comedy</option>
-    <option value="Crime">Crime</option>
-    <option value="Documentary">Documentary</option>
-    <option value="Drama">Drama</option>
-    <option value="Family">Family</option>
-    <option value="Fantasy">Fantasy</option>
-    <option value="Film-Noir">Film-Noir</option>
-    <option value="Game-Show">Game-Show</option>
-    <option value="History">History</option>
-    <option value="Horror">Horror</option>
-    <option value="Music">Music</option>
-    <option value="Musical">Musical</option>
-    <option value="Mystery">Mystery</option>
-    <option value="News">News</option>
-    <option value="Reality-TV">Reality-TV</option>
-    <option value="Romance">Romance</option>
-    <option value="Sci-Fi">Sci-Fi</option>
-    <option value="Short">Short</option>
-    <option value="Sport">Sport</option>
-    <option value="Talk-Show">Talk-Show</option>
-    <option value="Thriller">Thriller</option>
-    <option value="War">War</option>
-    <option value="Western">Western</option>
+    <option v-for="genre in genres" :key="genre" :value="genre">{{ genre }}</option>
   </select>
   <br>
     <label for="dob" class="mt-4">Date of Birth</label>
@@ -80,6 +48,7 @@ export default {
       dob: '',
       minRating: '',
       emailPreferences: '',
+      genres: []
     };
   },
   methods: {
@@ -143,6 +112,15 @@ export default {
       console.log('RESPONSE END: ', response);
     },
   },
+  created: async function () {
+  try {
+    const response = await axios.get('http://localhost:8081/metadata/genres');
+    this.genres = response.data;
+  } catch (e) {
+    console.log(e);
+  }
+},
+
 };
 </script>
 

@@ -26,42 +26,42 @@ export default {
   },
   methods: {
     async LogIn() {
-      var data = {
-        username: this.username,
-        password: this.password,
-      };
+  var data = {
+    username: this.username,
+    password: this.password,
+  };
 
-      try {
-        const response = await axios.post(
-          "http://localhost:8081/auth/login",
-          data,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        // saving the jwt returned in the response into the token variable
-        this.token = response.data;
-
-        //checking if a jwt token is returned, all jwt tokens start with "ey"
-        if (typeof this.token === "string" && this.token.startsWith("ey")) {
-          // decoding the jwt and save it in the decodedToken variable
-          this.decodedToken = jwt_decode(this.token);
-          // saving the returned user role into the role variable
-          this.role = this.decodedToken.role;
-          // saving the token into the windows local storage
-          localStorage.setItem("jwtToken", this.token);
-          console.log(localStorage.getItem("jwtToken"));
-          this.$router.push("/metadata/search");
-        }
-      } catch (e) {
-        console.log(e);
-        console.log("error");
-        alert("User doesn't exist!")
+  try {
+    const response = await axios.post(
+      "http://localhost:8081/auth/login",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    },
+    );
+
+    this.token = response.data;
+
+    if (typeof this.token === "string" && this.token.startsWith("ey")) {
+      this.decodedToken = jwt_decode(this.token);
+      this.role = this.decodedToken.role;
+      localStorage.setItem("jwtToken", this.token);
+
+      // Redirect based on the user role
+      if (this.role === "ADMIN") {
+        this.$router.push("/auth/adminView");
+      } else {
+        this.$router.push("/metadata/search");
+      }
+    }
+  } catch (e) {
+    console.log(e);
+    console.log("error");
+    alert("User doesn't exist!");
+  }
+},
   },
 };
 </script>

@@ -14,6 +14,16 @@ import watchlist from "../views/watchlist"
 import discovery from "../views/discovery"
 import jwt_decode from "jwt-decode";
 
+function requireAuth(to, from, next) {
+  const token = localStorage.getItem("jwtToken");
+  if (!token) {
+    next({ path: "/auth/login" });
+    alert('You need login first!')
+  } else {
+    next();
+  }
+}
+
 const routes = [
     {
         path: "/",
@@ -143,6 +153,7 @@ const routes = [
           }
         }
       },
+
 },
 {
     path: "/watchlist/get/:sub",
@@ -204,21 +215,29 @@ const routes = [
     path: "/metadata/search",
     name: "metadata",
     component: metadata,
+    beforeEnter: requireAuth
+
 },
 {
     path: "/metadata/searchByParams/genre=:genreValue&info=custom_info",
     name: "searchByParams",
     component: searchByParams,
+    beforeEnter: requireAuth
+
 },
 {
     path: "/metadata/searchByIDs/:id",
     name: "searchByID",
     component: searchByID,
+    beforeEnter: requireAuth
+
 },
 {
   path: "/review/delete/:id",
   name: "deleteReview",
   component: allReview,
+  beforeEnter: requireAuth
+
 },
 
 

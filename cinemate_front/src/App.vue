@@ -14,7 +14,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav">
-          <router-link class="nav-item nav-link active" to="/metadata/search">Home</router-link>
+          <router-link class="nav-item nav-link active" :to="homeRoute">Home</router-link>
           <router-link v-if="isLoggedIn && userRole === 'USER'" class="nav-item nav-link active" :to="watchlistRoute">My Watchlist</router-link>
           <router-link v-if="isLoggedIn && userRole === 'USER'" class="nav-item nav-link active" :to="discoveryRoute">Discovery</router-link>
           <router-link v-if="isLoggedIn && userRole === 'ADMIN'" class="nav-item nav-link active" to="/review/all">All Reviews</router-link>
@@ -116,7 +116,10 @@ export default {
     },
     discoveryRoute() {
       return `/discovery/${this.params}`;
-    }
+    },
+    homeRoute() {
+    return this.isLoggedIn && this.userRole === 'ADMIN' ? '/auth/adminView' : '/metadata/search';
+  },
   },
 };
 </script>
