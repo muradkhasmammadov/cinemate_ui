@@ -11,9 +11,8 @@
     <input type="password" name="password" required v-model="password" />
     <label for="role" class="mt-4">Role</label><br>
     <select name="role" required v-model="role"> 
-      <option value="" disabled>Choose your role</option>
-      <option value="USER">USER</option>
-      <option value="ADMIN">ADMIN</option>
+      <!-- <option value="" disabled>Choose your role</option> -->
+      <option value="USER" selected>USER</option>
     </select> <br>
     <label for="favGenre" class="mt-4">Favorite Genre</label><br>
    <select name="favGenre" required v-model="favGenre">
@@ -76,7 +75,7 @@ export default {
       username: '',
       email: '',
       password: '',
-      role: '',
+      role: 'USER',
       favGenre: '',
       dob: '',
       minRating: '',
