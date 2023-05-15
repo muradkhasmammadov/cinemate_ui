@@ -101,7 +101,7 @@
     },
     created: async function () {
     try {
-      const response = await axios.get('http://localhost:8081/metadata/genres');
+      const response = await axios.get('http://localhost:8081/navigator/genres');
       this.genres = response.data;
 
       const username = this.decodedToken.sub;

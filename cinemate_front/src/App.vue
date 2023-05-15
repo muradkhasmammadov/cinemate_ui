@@ -128,7 +128,7 @@ export default {
       return '/updateProfile';
     },
     homeRoute() {
-    return this.isLoggedIn && this.userRole === 'ADMIN' ? '/auth/adminView' : '/metadata/search';
+    return this.isLoggedIn && this.userRole === 'ADMIN' ? '/auth/adminView' : '/navigator/search';
   },
   },
 };

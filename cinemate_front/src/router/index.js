@@ -27,250 +27,237 @@ function requireAuth(to, from, next) {
 
 const routes = [
   {
-    path: "/",
-    name: "home",
+    path: '/',
+    name: 'home',
     component: HomeView,
     beforeEnter: async (to, from, next) => {
       let authResult = await auth.authenticated();
       if (!authResult) {
-        next("/auth/login");
+        next('/auth/login');
       } else {
         // Get the token from local storage
-        const token = localStorage.getItem("jwtToken");
+        const token = localStorage.getItem('jwtToken');
 
         // Decode the token to get the user role
         const decodedToken = jwt_decode(token);
         const userRole = decodedToken.role;
 
         // Navigate to different views based on user role
-        if (userRole === "USER") {
-          next("/auth/login");
-        } else if (userRole === "ADMIN") {
-          next("/auth/adminView");
+        if (userRole === 'USER') {
+          next('/auth/login');
+        } else if (userRole === 'ADMIN') {
+          next('/auth/adminView');
         } else {
           // If the role is not recognized, redirect to login
-          next("/auth/login");
+          next('/auth/login');
         }
       }
     },
   },
 
   {
-    path: "/auth/adminView",
-    name: "adminView",
+    path: '/auth/adminView',
+    name: 'adminView',
     component: adminView,
     beforeEnter: (to, from, next) => {
-      const token = localStorage.getItem("jwtToken");
+      const token = localStorage.getItem('jwtToken');
 
       if (!token) {
         // If no token found, redirect to the login page
-        next("/auth/login");
+        next('/auth/login');
       } else {
         // If token is found, check if it is valid and has the ADMIN role
         try {
           const decodedToken = jwt_decode(token);
 
-          if (decodedToken.role && decodedToken.role.includes("ADMIN")) {
+          if (decodedToken.role && decodedToken.role.includes('ADMIN')) {
             next(); // Proceed to the AllReviews component if the user is an admin
           } else {
-            this.$router.push("/metadata/search"); // Redirect to the homepage or any other page if the user is not an admin
-            alert("User is not admin");
-
+            this.$router.push('/navigator/search'); // Redirect to the homepage or any other page if the user is not an admin
+            alert('User is not admin');
           }
         } catch (error) {
-          console.log("Invalid token", error);
-          localStorage.removeItem("jwtToken"); // Remove the invalid token
-          next("/auth/login"); // Redirect to the login page
+          console.log('Invalid token', error);
+          localStorage.removeItem('jwtToken'); // Remove the invalid token
+          next('/auth/login'); // Redirect to the login page
         }
       }
     },
   },
   {
-    path: "/auth/register",
-    name: "SignUp",
+    path: '/auth/register',
+    name: 'SignUp',
     component: SignUp,
   },
   {
-    path: "/auth/login",
-    name: "Login",
+    path: '/auth/login',
+    name: 'Login',
     component: Login,
   },
   {
-    path: "/review/add",
-    name: "addReview",
+    path: '/review/add',
+    name: 'addReview',
     component: addReview,
     beforeEnter: (to, from, next) => {
-      const token = localStorage.getItem("jwtToken");
+      const token = localStorage.getItem('jwtToken');
 
       if (!token) {
         // If no token found, redirect to the login page
-        next("/auth/login");
+        next('/auth/login');
       } else {
         // If token is found, check if it is valid and has the ADMIN role
         try {
           const decodedToken = jwt_decode(token);
 
-          if (decodedToken.role && decodedToken.role.includes("USER")) {
+          if (decodedToken.role && decodedToken.role.includes('USER')) {
             next(); // Proceed to the AllReviews component if the user is an admin
           } else {
-            next("/"); // Redirect to the homepage or any other page if the user is not an admin
-            alert("Admin cannot add review");
-
+            next('/'); // Redirect to the homepage or any other page if the user is not an admin
+            alert('Admin cannot add review');
           }
         } catch (error) {
-          console.log("Invalid token", error);
-          localStorage.removeItem("jwtToken"); // Remove the invalid token
-          next("/auth/login"); // Redirect to the login page
+          console.log('Invalid token', error);
+          localStorage.removeItem('jwtToken'); // Remove the invalid token
+          next('/auth/login'); // Redirect to the login page
         }
       }
     },
   },
   {
-    path: "/review/all",
-    name: "allReview",
+    path: '/review/all',
+    name: 'allReview',
     component: allReview,
     beforeEnter: (to, from, next) => {
-      const token = localStorage.getItem("jwtToken");
+      const token = localStorage.getItem('jwtToken');
 
       if (!token) {
         // If no token found, redirect to the login page
-        next("/auth/login");
+        next('/auth/login');
       } else {
         // If token is found, check if it is valid and has the ADMIN role
         try {
           const decodedToken = jwt_decode(token);
 
-          if (decodedToken.role && decodedToken.role.includes("ADMIN")) {
+          if (decodedToken.role && decodedToken.role.includes('ADMIN')) {
             next(); // Proceed to the AllReviews component if the user is an admin
           } else {
-            next("/"); // Redirect to the homepage or any other page if the user is not an admin
-            alert("Only admins can see reviews");
-
+            next('/'); // Redirect to the homepage or any other page if the user is not an admin
+            alert('Only admins can see reviews');
           }
         } catch (error) {
-          console.log("Invalid token", error);
-          localStorage.removeItem("jwtToken"); // Remove the invalid token
-          next("/auth/login"); // Redirect to the login page
+          console.log('Invalid token', error);
+          localStorage.removeItem('jwtToken'); // Remove the invalid token
+          next('/auth/login'); // Redirect to the login page
         }
       }
     },
-
   },
   {
-    path: "/watchlist/get/:sub",
-    name: "watchlist",
+    path: '/watchlist/get/:sub',
+    name: 'watchlist',
     component: watchlist,
     beforeEnter: (to, from, next) => {
-      const token = localStorage.getItem("jwtToken");
-      console.log(token)
+      const token = localStorage.getItem('jwtToken');
+      console.log(token);
       if (!token) {
-        next("/auth/login");
+        next('/auth/login');
       } else {
         try {
           const decodedToken = jwt_decode(token);
 
-          if (decodedToken.role && decodedToken.role.includes("USER")) {
+          if (decodedToken.role && decodedToken.role.includes('USER')) {
             next();
           } else {
-            next("/");
-            alert("User is not admin");
-
+            next('/');
+            alert('User is not admin');
           }
         } catch (error) {
-          console.log("Invalid token", error);
-          localStorage.removeItem("jwtToken"); // Remove the invalid token
-          next("/auth/login"); // Redirect to the login page
+          console.log('Invalid token', error);
+          localStorage.removeItem('jwtToken'); // Remove the invalid token
+          next('/auth/login'); // Redirect to the login page
         }
       }
     },
   },
   {
-    path: "/updateProfile",
-    name: "updateProfile",
+    path: '/updateProfile',
+    name: 'updateProfile',
     component: updateProfile,
     beforeEnter: (to, from, next) => {
-      const token = localStorage.getItem("jwtToken");
-      console.log(token)
+      const token = localStorage.getItem('jwtToken');
+      console.log(token);
       if (!token) {
-        next("/auth/login");
+        next('/auth/login');
       } else {
         try {
           const decodedToken = jwt_decode(token);
 
-          if (decodedToken.role && decodedToken.role.includes("USER")) {
+          if (decodedToken.role && decodedToken.role.includes('USER')) {
             next();
           } else {
-            next("/");
-            alert("User is not admin");
-
+            next('/');
+            alert('User is not admin');
           }
         } catch (error) {
-          console.log("Invalid token", error);
-          localStorage.removeItem("jwtToken"); // Remove the invalid token
-          next("/auth/login"); // Redirect to the login page
+          console.log('Invalid token', error);
+          localStorage.removeItem('jwtToken'); // Remove the invalid token
+          next('/auth/login'); // Redirect to the login page
         }
       }
     },
   },
   {
-    path: "/discovery",
-    name: "discovery",
+    path: '/discovery',
+    name: 'discovery',
     component: discovery,
     beforeEnter: (to, from, next) => {
-      const token = localStorage.getItem("jwtToken");
-      console.log(token)
+      const token = localStorage.getItem('jwtToken');
+      console.log(token);
       if (!token) {
-        next("/auth/login");
+        next('/auth/login');
       } else {
         try {
           const decodedToken = jwt_decode(token);
 
-          if (decodedToken.role && decodedToken.role.includes("USER")) {
+          if (decodedToken.role && decodedToken.role.includes('USER')) {
             next();
           } else {
-            next("/");
-            alert("User is not admin");
-
+            next('/');
+            alert('User is not admin');
           }
         } catch (error) {
-          console.log("Invalid token", error);
-          localStorage.removeItem("jwtToken"); // Remove the invalid token
-          next("/auth/login"); // Redirect to the login page
+          console.log('Invalid token', error);
+          localStorage.removeItem('jwtToken'); // Remove the invalid token
+          next('/auth/login'); // Redirect to the login page
         }
       }
     },
   },
   {
-    path: "/metadata/search",
-    name: "metadata",
+    path: '/navigator/search',
+    name: 'navigator',
     component: metadata,
-    beforeEnter: requireAuth
-
+    beforeEnter: requireAuth,
   },
   {
-    path: "/metadata/searchByParams/genre=:genreValue&info=custom_info",
-    name: "searchByParams",
+    path: '/navigator/searchByParams/genre=:genreValue&info=custom_info',
+    name: 'searchByParams',
     component: searchByParams,
-    beforeEnter: requireAuth
-
+    beforeEnter: requireAuth,
   },
   {
-    path: "/metadata/searchByIDs/:id",
-    name: "searchByID",
+    path: '/navigator/searchByIDs/:id',
+    name: 'searchByID',
     component: searchByID,
-    beforeEnter: requireAuth
-
+    beforeEnter: requireAuth,
   },
   {
-    path: "/review/delete/:id",
-    name: "deleteReview",
+    path: '/review/delete/:id',
+    name: 'deleteReview',
     component: allReview,
-    beforeEnter: requireAuth
-
+    beforeEnter: requireAuth,
   },
-
-
-]
+];
 
 
 const router = createRouter({

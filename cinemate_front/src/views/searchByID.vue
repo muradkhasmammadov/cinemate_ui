@@ -70,7 +70,7 @@ export default {
   methods: {
     fetchMetadata() {
   const id = this.$route.params.id;
-  axios.get(`/metadata/searchByIDs/${id}`)
+  axios.get(`/navigator/searchByIDs/${id}`)
     .then((response) => {
     this.metadatas = response.data;
   })

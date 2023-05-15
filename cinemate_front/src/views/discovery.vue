@@ -29,7 +29,7 @@
               <h5 class="card-title">{{ truncateTitle(metadata.title) }}</h5>
               <h6 class="card-subtitle mb-2">{{ metadata.genre }}</h6>
               <p class="card-text"> <i class="fa fa-star"></i> {{ metadata.rating }}</p>
-              <a :href=" '/metadata/searchByIDs/' + metadata.id ">
+              <a :href=" '/navigator/searchByIDs/' + metadata.id ">
                 <button type="button" class="btn btn-read-more">Read More</button> 
               </a><br>
               <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)" v-if="!isInWatchlist(metadata.id)"><i class="fa fa-plus"></i> Watchlist</button>
@@ -80,7 +80,7 @@ export default {
         this.isLoading = false;
     },
     fetchGenres() {
-    axios.get('http://localhost:8081/metadata/genres')
+    axios.get('http://localhost:8081/navigator/genres')
       .then((response) => this.genres = response.data)
       .catch((err) => console.log(err.message));
   },

@@ -53,7 +53,7 @@ export default {
       if (this.role === "ADMIN") {
         this.$router.push("/auth/adminView");
       } else {
-        this.$router.push("/metadata/search");
+        this.$router.push("/navigator/search");
       }
     }
   } catch (e) {

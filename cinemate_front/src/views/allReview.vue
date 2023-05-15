@@ -100,7 +100,7 @@ export default {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           };
-          const response = await axios.get("http://localhost:8081/metadata/search", {
+          const response = await axios.get("http://localhost:8081/navigator/search", {
             headers,
           });
           this.reviews = response.data;
