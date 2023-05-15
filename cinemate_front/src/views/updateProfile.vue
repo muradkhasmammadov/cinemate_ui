@@ -104,7 +104,8 @@
       const response = await axios.get('http://localhost:8081/metadata/genres');
       this.genres = response.data;
 
-      const userResponse = await axios.get(`http://localhost:8081/auth/${this.sub}`);
+      const username = this.decodedToken.sub;
+      const userResponse = await axios.get(`http://localhost:8081/auth/${username}`);
       console.log(this.username);
       this.fullName = userResponse.fullName;
       this.username = userResponse.username;
