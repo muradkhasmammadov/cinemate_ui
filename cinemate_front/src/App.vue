@@ -17,6 +17,7 @@
           <router-link class="nav-item nav-link active" :to="homeRoute">Home</router-link>
           <router-link v-if="isLoggedIn && userRole === 'USER'" class="nav-item nav-link active" :to="watchlistRoute">My Watchlist</router-link>
           <router-link v-if="isLoggedIn && userRole === 'USER'" class="nav-item nav-link active" :to="discoveryRoute">Discovery</router-link>
+          <router-link v-if="isLoggedIn && userRole === 'USER'" class="nav-item nav-link active" :to="discoveryRoute">Update Profile</router-link>
           <router-link v-if="isLoggedIn && userRole === 'ADMIN'" class="nav-item nav-link active" to="/review/all">All Reviews</router-link>
         </div>
         <div class="navbar-nav ms-auto">
@@ -116,7 +117,7 @@ export default {
       return `/watchlist/get/${this.sub}`;
     },
     discoveryRoute() {
-      return `/discovery/${this.params}`;
+      return `/discovery`;
     },
     homeRoute() {
     return this.isLoggedIn && this.userRole === 'ADMIN' ? '/auth/adminView' : '/metadata/search';

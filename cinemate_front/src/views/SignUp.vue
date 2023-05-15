@@ -25,8 +25,6 @@
     <option value="daily">daily</option>
     <option value="weekly">weekly</option>
     <option value="monthly">monthly</option>
-    <option value="twicePerWeek">twicePerWeek</option>
-    <option value="thricePerWeek">thricePerWeek</option>
     </select>
     <button @click="SignUp" class="SignUp">SignUp</button>
   </div>
