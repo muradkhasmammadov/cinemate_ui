@@ -21,7 +21,14 @@
   
     <button @click="SignUp" class="SignUp">SignUp</button>
   </div>
-  <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
+  <!-- <div v-if="successMessage" class="success-message">{{ successMessage }}</div> -->
+<div class="popup-message" v-if="showPopup">
+    <div class="popup-content">
+      <span class="close" @click="closePopup">&times;</span>
+      {{ successMessage }}
+    </div>
+  </div>
+
 </template>
 
 <script>
@@ -48,6 +55,7 @@ export default {
     emailPreferences: 'twicePerWeek',
     showForm: false,
     successMessage: '',
+    showPopup: false,
 
   }
   },
@@ -55,7 +63,9 @@ export default {
     toggleForm() {
       this.showForm = !this.showForm;
     },
-
+    closePopup() {
+          this.showPopup = false;
+        },
     async SignUp() {
       var data = {
         fullName: this.fullName,
@@ -98,6 +108,7 @@ export default {
             this.$router.push('/');
           }
           this.successMessage = `${this.username} created`;
+          this.showPopup = true;
           this.showForm = false;
         })
         .catch((e) => {
@@ -154,6 +165,43 @@ export default {
     font-size: 1.2em;
     font-weight: bold;
     color: green;
+  }
+.popup-message {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .popup-content {
+    position: absolute; /* Updated position */
+    top: 50%; /* Center the popup vertically */
+    left: 50%; /* Center the popup horizontally */
+    transform: translate(-50%, -50%); /* Adjust the popup position */
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
   }
 .form {
   max-width: 420px;

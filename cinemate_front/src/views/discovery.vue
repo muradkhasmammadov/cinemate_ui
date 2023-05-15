@@ -113,7 +113,10 @@ export default {
       };
       try {
         const response = await axios.get(`http://localhost:8081/discovery/${this.params}`, {headers});
+        const response2 = await axios.get(`http://localhost:8081/watchlist/get/${this.sub}`, {headers});
+        this.movies = response.data;
         this.metadatas = response.data
+        this.watchlistIds = response2.data.map(movie => movie.id); 
         console.log(response.data)
         console.log(this.metadatas, "metadatas")
         console.log(headers)

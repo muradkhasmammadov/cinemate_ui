@@ -138,7 +138,6 @@ export default {
   },
     },
   mounted() {
-    // call fetchProducts() when this element (AllReviews()) mounts 
     this.fetchMetadatas();
     console.log("mounted");
   },
