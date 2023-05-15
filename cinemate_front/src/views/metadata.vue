@@ -124,7 +124,7 @@ export default {
     },
     isInWatchlist(contentId) {
   if (!this.isLoggedIn) {
-    return false;
+    return false; 
   }
   return this.watchlistIds.includes(contentId);
 },

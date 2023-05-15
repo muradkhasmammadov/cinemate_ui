@@ -15,7 +15,7 @@
                     <p class="card-text"> {{ metadata.description }}</p>
                     <h6 class="card-subtitle mb-2">{{ metadata.genre }}</h6>
                     <p class="card-text card-genre"> <i class="fa fa-star"></i> {{ metadata.rating }}</p>
-                    <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)" v-if="!isInWatchlist(metadata.id) "><i class="fa fa-plus"></i> Watchlist</button> <br>
+                    <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)" v-if="!isInWatchlist(metadata.id)"><i class="fa fa-plus"></i> Watchlist</button> <br>
                   </div>
                   <ul class="list-group list-group-flush">
                   <li class="list-group-item"> {{metadata.director}} </li>
@@ -25,9 +25,9 @@
           </div>
               <div class="col-md-6" >
                 <h1>Add New Review</h1>
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Content" required v-model="review.userId" readonly> 
-                  </div>
+                  </div> -->
                   <div class="form-group">
                     <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Content" required v-model="review.contentId" readonly>
                   </div>
@@ -64,8 +64,6 @@ export default {
         score: 0,
       },
       watchlistIds: [],
-      genres: [],
-      selectedGenre: ''
     };
     
   },
@@ -142,7 +140,7 @@ export default {
     },
     isInWatchlist(contentId) {
   if (!this.isLoggedIn) {
-    return false;
+    return false; 
   }
   return this.watchlistIds.includes(contentId);
 },
@@ -152,7 +150,7 @@ export default {
     this.fetchMetadata();
     console.log("mounted");
   },
-  created() {
+  async created() {
   if (this.$route.params.id) {
     this.review.contentId = this.$route.params.id;
   }
@@ -163,7 +161,27 @@ export default {
     const decodedToken = jwt_decode(token);
     if (decodedToken.exp * 1000 > Date.now()) {
       this.review.userId = decodedToken.id;
-    } else {
+      this.isLoggedIn = true;
+      this.userId = decodedToken.id;
+      this.sub = decodedToken.sub;
+    }
+    if (this.isLoggedIn) {
+      const token = localStorage.getItem("jwtToken");
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      try {
+        const response = await axios.get(`http://localhost:8081/watchlist/get/${this.sub}`, {headers});
+        this.movies = response.data;
+        console.log(headers)
+        this.watchlistIds = response.data.map(movie => movie.id); 
+
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+    else {
       this.$router.push("/auth/login");
     }
   } else {

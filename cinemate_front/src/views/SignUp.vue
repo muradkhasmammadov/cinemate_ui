@@ -64,19 +64,12 @@ export default {
         minRating: this.minRating,
         emailPreferences: this.emailPreferences,
       };
-      // console.log('CSRF TOKEN: ', document.cookie.match(new RegExp(`XSRF-TOKEN=([^;]+)`)));
-
-      // var CSRF_TOKEN = document.cookie.match(new RegExp(`XSRF-TOKEN=([^;]+)`))[1];
-
       var headers = {
         'Content-Type': 'application/json',
       };
-
-      // using Fetch - post method - send an HTTP post request to the specified URI with the defined body
       console.log(data);
       const response = await axios
-        .post(
-          'http://localhost:8081/auth/register',
+        .post('http://localhost:8081/auth/register',
           {
             fullName: this.fullName,
             username: this.username,
@@ -91,15 +84,11 @@ export default {
           headers
         )
         .then((response) => {
-          //saving the jwt in the token variable
           this.token = response.data;
           if (this.token.startsWith('ey')) {
-            //decoding the jwt and save it in the decodedToken variable
             this.decodedToken = jwt_decode(this.token);
-            // saving the returned user role into the role variable
             this.role = this.decodedToken.role;
             console.log(this.decodedToken.role);
-            // saving the token into the windows local storage
             localStorage.setItem('jwtToken', this.token);
             console.log(localStorage.getItem('jwtToken'));
             this.$router.push('/');

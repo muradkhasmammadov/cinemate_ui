@@ -81,7 +81,8 @@ export default {
     const token = localStorage.getItem("jwtToken");
     if (token) {
       const decodedToken = jwt_decode(token);
-      console.log('Decoded token:', decodedToken); // Add this line to log the decoded token
+      console.log('Decoded token:', decodedToken); 
+      console.log('token:', token); 
       if (decodedToken.exp * 1000 > Date.now()) {
         this.isLoggedIn = true;
         this.userRole = decodedToken.role;
