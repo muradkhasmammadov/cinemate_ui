@@ -6,7 +6,7 @@
       <label for="username" class="mt-4">User Name</label>
       <input type="text" name="username" readonly required v-model="username" />
       <label for="email" class="mt-4">Email</label>
-      <input type="email" name="email" required v-model="email" />
+      <input type="email" name="email" readonly required v-model="email" />
       <label for="password" class="mt-4">Password</label>
       <input type="password" name="password" required v-model="password" />
       <label for="favGenre" class="mt-4">Favorite Genre</label><br>
@@ -89,7 +89,7 @@
               console.log(this.decodedToken.role);
               localStorage.setItem('jwtToken', this.token);
               console.log(localStorage.getItem('jwtToken'));
-              this.$router.push('/');
+              this.$router.push('/navigator/search');
             }
           })
           .catch((e) => {
@@ -97,6 +97,7 @@
             console.log('error');
           });
         console.log('RESPONSE END: ', response);
+        this.$router.push('/navigator/search');
       },
     },
     created: async function () {
@@ -104,18 +105,22 @@
       const response = await axios.get('http://localhost:8081/navigator/genres');
       this.genres = response.data;
 
-      const username = this.decodedToken.sub;
-      const userResponse = await axios.get(`http://localhost:8081/auth/${username}`);
-      console.log(this.username);
-      this.fullName = userResponse.fullName;
-      this.username = userResponse.username;
-      this.email = userResponse.email;
-      this.password = userResponse.password;
-      this.role = userResponse.role;
-      this.favGenre = userResponse.favGenre;
-      this.dob = userResponse.dob;
-      this.minRating = userResponse.minRating;
-      this.emailPreferences = userResponse.emailPreferences;
+      const token = localStorage.getItem('jwtToken');
+      const decodedToken = jwt_decode(token);
+      const username = decodedToken.sub;
+      
+      let userResponse = await axios.get(`http://localhost:8081/auth/${username}`);
+      const userData = userResponse.data;
+      
+      this.fullName = userData.fullName;
+      this.username = userData.username;
+      this.email = userData.email;
+      
+      this.role = userData.role;
+      this.favGenre = userData.favGenre;
+      this.dob = userData.dob;
+      this.minRating = userData.minRating;
+      this.emailPreferences = userData.emailPreferences;
     } catch (e) {
       console.log(e);
     }
