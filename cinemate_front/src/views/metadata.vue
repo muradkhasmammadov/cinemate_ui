@@ -2,19 +2,12 @@
    <section class="movies-section">
   <div class="container">
     <h1>Explore Movies</h1>
-   <div class="navbar-nav">
-   <div class="search">
-  <select v-model="selectedGenre" class="form-control">
-    <option value="" disabled>Select a genre</option>
-    <option v-for="genre in genres" :key="genre" :value="genre">{{ genre }}</option>
-  </select>
-  <a class="btn btn-watchlist" :href="'/metadata/searchByParams/genre=' + selectedGenre + '&info=custom_info'">
-    <button type="submit" @click="searchByParams" class="btn btn-default">
+      <div class="search-title">
+    <input type="text" v-model="searchInput" class="form-control" placeholder="Search movies">
+    <button type="button" @click="searchByInput" class="btn btn-default">
       <i class="fa fa-search"></i>
     </button>
-  </a>
-</div>
-   </div>
+    </div> <br>
     <div class="movies-grid">
       <div class="row">
         <div class="col-md-3 my-3" v-for="metadata in metadatas" :key="metadata.id">
@@ -53,17 +46,11 @@ export default {
       ids: '',
       movies: [],
       watchlistIds: [],
-      genres: [],
-      selectedGenre: '', 
+      dates: [], 
+      ratings: [], 
     };
   },
   methods: {
-    fetchGenres() {
-    axios.get('http://localhost:8081/metadata/genres')
-      .then((response) => this.genres = response.data)
-      .catch((err) => console.log(err.message));
-  },
-
     fetchMetadatas() {
     const query = this.$route.params.genreValue;
     const url = query && query.info
@@ -82,14 +69,13 @@ export default {
     poster(metadata) {
       return metadata.poster === 'not found' ? 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/04174dbc-fe2f-4983-824a-6d80412e917e/de25zez-cffb25c6-278b-4c76-a63e-5a75b6b4892d.png/v1/fill/w_800,h_600,q_80,strp/404_not_found__20th_century_box_style__by_xxneojadenxx_de25zez-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwIiwicGF0aCI6IlwvZlwvMDQxNzRkYmMtZmUyZi00OTgzLTgyNGEtNmQ4MDQxMmU5MTdlXC9kZTI1emV6LWNmZmIyNWM2LTI3OGItNGM3Ni1hNjNlLTVhNzViNmI0ODkyZC5wbmciLCJ3aWR0aCI6Ijw9ODAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.GMT6ZFtK1otxk4cvLolKhpYrWievHzrf64y4N7sP8ZM' : metadata.poster;
     },
-    searchByParams() {
-    this.$router.push({
-      name: 'searchResults',
-      query: {
-        genre: this.selectedGenre,
-        info: 'custom_info',
-      },
-    });
+  async searchByInput() {
+    try {
+      const response = await axios.get(`http://localhost:8081/discovery/search/${this.searchInput},no,no,no,no,no,no,no,no`);
+      this.metadatas = response.data;
+    } catch (err) {
+      console.log(err.message);
+    }
   },
   async addToWatchlist(contentId) {
           const token = localStorage.getItem("jwtToken");
@@ -167,7 +153,6 @@ export default {
         console.log(err.message);
       }
     }
-    this.fetchGenres(); 
   },
 };
 
@@ -192,6 +177,13 @@ body {
 }
 .fa-star, .fa-plus{
   color: #ffc107;
+}
+.search-title input{
+  width: 90%;
+  float: left;
+}
+.search-title i{
+  float: right;
 }
 .movies-section h2 {
   margin-bottom: 30px;
@@ -220,10 +212,11 @@ body {
 
 .card-img-top {
   width: 100%;
-  height: auto;
+  height: 100%!important;
   object-fit: cover;
   border-radius: 5px;
 }
+
 
 .card-body {
   padding: 20px 0 0;
