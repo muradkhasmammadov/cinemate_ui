@@ -29,9 +29,6 @@
 <div class="row">
   <div class="col-md-6 add-review" >
                 <h3>Add New Review</h3>
-                  <!-- <div class="form-group">
-                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Content" required v-model="review.userId" readonly> 
-                  </div> -->
                   <div class="form-group">
                     <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Content" required v-model="review.contentId" readonly>
                   </div>
@@ -61,7 +58,7 @@
               <div class="d-flex flex-row align-items-center">
                 <p class="small text-muted mb-0">Rating</p>
                 <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
-                <p class="small text-muted mb-0">{{ comment.score }}</p>
+                <p class="small text-muted mb-0">  <i class="fa fa-star"> </i> {{ comment.score }}</p>
               </div>
             </div>
           </div>
@@ -128,8 +125,8 @@ export default {
   .catch((err) => console.log(err.message));
   // alert('An error occurred while adding the review. Please try again.');
   },
-  fetchComments() {
-    axios.get('http://localhost:8081/review/all')
+  fetchComments(contentId) {
+    axios.get(`http://localhost:8081/review/content/${contentId}`)
       .then(response => {
         this.comments = response.data;
       })
@@ -207,7 +204,7 @@ export default {
 
   mounted() {
     this.fetchMetadata();
-    this.fetchComments(); 
+    this.fetchComments(this.$route.params.id); 
     console.log("mounted");
   },
   async created() {
