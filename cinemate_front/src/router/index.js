@@ -185,7 +185,7 @@ const routes = [
     },
   },
   {
-    path: "/update/profile",
+    path: "/updateProfile",
     name: "updateProfile",
     component: updateProfile,
     beforeEnter: (to, from, next) => {
