@@ -1,8 +1,5 @@
 <template>
- <div class="loader" v-if="isLoading">
-    <div class="spinner"></div>
-  </div>
-<section v-else class="movies-section">
+<section class="movies-section">
   <div class="container">
     <h1>Recommended  Movies</h1>
     <div class="navbar-nav">
@@ -56,7 +53,6 @@ export default {
     return {
       metadatas: [],
       isLoggedIn: false,
-      isLoading: true,
       userId: null,
       watchlistIds: [],
       genres: [],
@@ -74,10 +70,10 @@ export default {
     },
     fetchMetadatas() {
         const url = `/discovery/${this.params}`
+
         axios.get(url)
             .then((response) => this.metadatas = response.data)
             .catch((err) => console.log(err.message));
-        this.isLoading = false;
     },
     fetchGenres() {
     axios.get('http://localhost:8081/navigator/genres')

@@ -54,8 +54,8 @@ export default {
     fetchMetadatas() {
     const query = this.$route.params.genreValue;
     const url = query && query.info
-      ? `/navigator/searchByParams?genre=${query}&info=custom_info`
-      : '/navigator/search';
+      ? `http://localhost:8081/navigator/searchByParams?genre=${query}&info=custom_info`
+      : 'http://localhost:8081/navigator/search';
 
     axios.get(url)
       .then((response) => this.metadatas = response.data)

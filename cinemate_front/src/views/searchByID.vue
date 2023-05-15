@@ -23,8 +23,12 @@
               </div>
               </div>
           </div>
-              <div class="col-md-6" >
-                <h1>Add New Review</h1>
+          </div>
+
+<div class="container last">
+<div class="row">
+  <div class="col-md-6 add-review" >
+                <h3>Add New Review</h3>
                   <!-- <div class="form-group">
                     <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Content" required v-model="review.userId" readonly> 
                   </div> -->
@@ -39,8 +43,54 @@
                   </div>
                     <input type="submit" class="btn btn-primary mt-3" @click="addReview" value="Add Review">
                 </div>
+
+  <div class="col-md-6 col-lg-6 comments mt-5">
+    <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+      <div class="card-body p-4">
+        <!-- Iterate over the comments array -->
+        <div v-for="comment in comments" :key="comment.id" class="card mb-4">
+          <div class="card-body">
+            <p>{{ comment.body }}</p>
+
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-row align-items-center">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(4).webp" alt="avatar" width="25"
+                  height="25" />
+                <p class="small mb-0 ms-2">{{ comment.userId }}</p>
+              </div>
+              <div class="d-flex flex-row align-items-center">
+                <p class="small text-muted mb-0">Rating</p>
+                <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                <p class="small text-muted mb-0">{{ comment.score }}</p>
+              </div>
+            </div>
           </div>
+        </div>
+        <div class="card mb-4">
+          <div class="card-body">
+            <p>Type your note, and hit enter to add it</p>
+
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-row align-items-center">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(4).webp" alt="avatar" width="25"
+                  height="25" />
+                <p class="small mb-0 ms-2">Martha</p>
+              </div>
+              <div class="d-flex flex-row align-items-center">
+                <p class="small text-muted mb-0">Upvote?</p>
+                <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                <p class="small text-muted mb-0">3</p>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
     </section>
     
 </template>
@@ -64,6 +114,7 @@ export default {
         score: 0,
       },
       watchlistIds: [],
+      comments: [],
     };
     
   },
@@ -77,8 +128,16 @@ export default {
   .catch((err) => console.log(err.message));
   // alert('An error occurred while adding the review. Please try again.');
   },
-
-    poster(metadata) {
+  fetchComments() {
+    axios.get('http://localhost:8081/review/all')
+      .then(response => {
+        this.comments = response.data;
+      })
+      .catch(error => {
+        console.log(error.message);
+      });
+  },
+  poster(metadata) {
       return metadata.poster === 'not found' ? 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/04174dbc-fe2f-4983-824a-6d80412e917e/de25zez-cffb25c6-278b-4c76-a63e-5a75b6b4892d.png/v1/fill/w_800,h_600,q_80,strp/404_not_found__20th_century_box_style__by_xxneojadenxx_de25zez-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwIiwicGF0aCI6IlwvZlwvMDQxNzRkYmMtZmUyZi00OTgzLTgyNGEtNmQ4MDQxMmU5MTdlXC9kZTI1emV6LWNmZmIyNWM2LTI3OGItNGM3Ni1hNjNlLTVhNzViNmI0ODkyZC5wbmciLCJ3aWR0aCI6Ijw9ODAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.GMT6ZFtK1otxk4cvLolKhpYrWievHzrf64y4N7sP8ZM' : metadata.poster;
     },
   addReview() {
@@ -148,6 +207,7 @@ export default {
 
   mounted() {
     this.fetchMetadata();
+    this.fetchComments(); 
     console.log("mounted");
   },
   async created() {
@@ -295,7 +355,15 @@ body {
   color: #fff!important;
   animation: .5s all;
 }
-
+.last{
+  width: 100%;
+}
+.add-review{
+  float: left;
+}
+.comments{
+  width: 100%;
+}
 
 .footer {
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),  url('https://images.purexbox.com/6c4ae5b99340c/imdb-tv-app-arrives-on-xbox-includes-thousands-of-free-movies.large.jpg');

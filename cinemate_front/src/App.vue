@@ -3,10 +3,7 @@
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="loader" v-if="isLoading">
-      <div class="spinner"></div>
-    </div>
-    <div class="container-fluid" v-else>
+    <div class="container-fluid">
       <div class="logo-container">
         <a href="#" class="navbar-brand">
           <img src="https://www.clipartmax.com/png/middle/1-10021_clipart-movies-hd-movies-logo-transparent.png" class="logo" alt="CineMate" />
@@ -20,7 +17,6 @@
           <router-link class="nav-item nav-link active" :to="homeRoute">Home</router-link>
           <router-link v-if="isLoggedIn && userRole === 'USER'" class="nav-item nav-link active" :to="watchlistRoute">My Watchlist</router-link>
           <router-link v-if="isLoggedIn && userRole === 'USER'" class="nav-item nav-link active" :to="discoveryRoute">Discovery</router-link>
-          <router-link v-if="isLoggedIn && userRole === 'USER'" class="nav-item nav-link active" :to="updateProfileRoute">Update Profile</router-link>
           <router-link v-if="isLoggedIn && userRole === 'ADMIN'" class="nav-item nav-link active" to="/review/all">All Reviews</router-link>
         </div>
         <div class="navbar-nav ms-auto">
@@ -75,7 +71,6 @@ export default {
       isLoggedIn: false,
       userRole: null,
       user_id: '',
-      isLoading: true,
     };
   },
   created() {
@@ -105,7 +100,6 @@ export default {
       this.user_id = null;
       this.sub = null;
     }
-    this.isLoading = false;
   },
     Logout() {
       auth.logout();
@@ -122,10 +116,7 @@ export default {
       return `/watchlist/get/${this.sub}`;
     },
     discoveryRoute() {
-      return `/discovery`;
-    },
-    updateProfileRoute() {
-      return '/updateProfile';
+      return `/discovery/${this.params}`;
     },
     homeRoute() {
     return this.isLoggedIn && this.userRole === 'ADMIN' ? '/auth/adminView' : '/navigator/search';

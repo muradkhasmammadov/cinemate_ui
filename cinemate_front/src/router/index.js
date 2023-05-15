@@ -73,8 +73,9 @@ const routes = [
           if (decodedToken.role && decodedToken.role.includes('ADMIN')) {
             next(); // Proceed to the AllReviews component if the user is an admin
           } else {
-            this.$router.push('/navigator/search'); // Redirect to the homepage or any other page if the user is not an admin
-            alert('User is not admin');
+            this.$router.push("/navigator/search"); // Redirect to the homepage or any other page if the user is not an admin
+            alert("User is not admin");
+
           }
         } catch (error) {
           console.log('Invalid token', error);
@@ -234,20 +235,20 @@ const routes = [
     },
   },
   {
-    path: '/navigator/search',
-    name: 'navigator',
+    path: "/navigator/search",
+    name: "metadata",
     component: metadata,
     beforeEnter: requireAuth,
   },
   {
-    path: '/navigator/searchByParams/genre=:genreValue&info=custom_info',
-    name: 'searchByParams',
+    path: "/navigator/searchByParams/genre=:genreValue&info=custom_info",
+    name: "searchByParams",
     component: searchByParams,
     beforeEnter: requireAuth,
   },
   {
-    path: '/navigator/searchByIDs/:id',
-    name: 'searchByID',
+    path: "/navigator/searchByIDs/:id",
+    name: "searchByID",
     component: searchByID,
     beforeEnter: requireAuth,
   },
