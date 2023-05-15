@@ -1,8 +1,25 @@
 <template>
-
-<section class="movies-section">
+ <div class="loader" v-if="isLoading">
+    <div class="spinner"></div>
+  </div>
+<section v-else class="movies-section">
   <div class="container">
     <h1>Recommended  Movies</h1>
+    <div class="navbar-nav">
+   <div class="search mt-5">
+  <select v-model="selectedGenre" class="form-control">
+    <option value="" disabled>Select a genre</option>
+    <option v-for="genre in genres" :key="genre" :value="genre">{{ genre }}</option>
+  </select>
+  <input type="number" min="0" max="9" placeholder="Select minimum rating between 0-9" v-model="selectedRating" class="form-control"> 
+
+  <!-- <a class="btn btn-watchlist" :href="'/discovery/' + selectedDate + ',' + selectedGenre + ',' + selectedRating"> -->
+    <button type="submit" @click="searchByParams" class="btn btn-default">
+      <i class="fa fa-search"></i>
+    </button>
+  <!-- </a> -->
+</div>
+   </div>
     <div class="movies-grid">
       <div class="row">
         <div class="col-md-3 my-3" v-for="metadata in metadatas" :key="metadata.id">
@@ -39,8 +56,13 @@ export default {
     return {
       metadatas: [],
       isLoggedIn: false,
+      isLoading: true,
       userId: null,
-      watchlistIds: []
+      watchlistIds: [],
+      genres: [],
+      selectedGenre: '', 
+      selectedDate: '',
+      selectedRating: '',
     };
   },
   methods: {
@@ -52,11 +74,29 @@ export default {
     },
     fetchMetadatas() {
         const url = `/discovery/${this.params}`
-
         axios.get(url)
             .then((response) => this.metadatas = response.data)
             .catch((err) => console.log(err.message));
+        this.isLoading = false;
     },
+    fetchGenres() {
+    axios.get('http://localhost:8081/metadata/genres')
+      .then((response) => this.genres = response.data)
+      .catch((err) => console.log(err.message));
+  },
+  async searchByParams() {
+     const response = await axios.get(`http://localhost:8081/discovery/${this.selectedDate},${this.selectedGenre},${this.selectedRating}`);
+     this.metadatas = response.data;
+  },
+  extractDateFromParams() {
+    const token = localStorage.getItem("jwtToken");
+    if (token) {
+      const decodedToken = jwt_decode(token);
+      const params = decodedToken.params;
+      const date = params.split(',')[0];
+      this.selectedDate = date;
+    }
+  },
     async addToWatchlist(contentId) {
           const token = localStorage.getItem("jwtToken");
           const decodedToken = jwt_decode(token)
@@ -93,38 +133,42 @@ export default {
 },
 
   },
-  async created() {
-    const token = localStorage.getItem("jwtToken");
-    if (token) {
-      const decodedToken = jwt_decode(token);
-      if (decodedToken.exp * 1000 > Date.now()) {
-        this.isLoggedIn = true;
-        this.userId = decodedToken.id;
-        this.sub = decodedToken.sub;
-        this.params = decodedToken.params;
-      }
-    }
+  mounted() {
+  this.extractDateFromParams();
+  this.fetchMetadatas();
+  this.fetchGenres();
+},
 
-    if (this.isLoggedIn) {
-      const token = localStorage.getItem("jwtToken");
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-      try {
-        const response = await axios.get(`http://localhost:8081/discovery/${this.params}`, {headers});
-        const response2 = await axios.get(`http://localhost:8081/watchlist/get/${this.sub}`, {headers});
-        this.movies = response.data;
-        this.metadatas = response.data
-        this.watchlistIds = response2.data.map(movie => movie.id); 
-        console.log(response.data)
-        console.log(this.metadatas, "metadatas")
-        console.log(headers)
-      } catch (err) {
-        console.log(err.message);
-      }
+  async created() {
+  const token = localStorage.getItem("jwtToken");
+  if (token) {
+    const decodedToken = jwt_decode(token);
+    if (decodedToken.exp * 1000 > Date.now()) {
+      this.isLoggedIn = true;
+      this.userId = decodedToken.id;
+      this.sub = decodedToken.sub;
+      this.params = decodedToken.params;
     }
-  },
+  }
+
+  if (this.isLoggedIn) {
+    const token = localStorage.getItem("jwtToken");
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await axios.get(`http://localhost:8081/discovery/${this.params}`, {headers});
+      const response2 = await axios.get(`http://localhost:8081/watchlist/get/${this.sub}`, {headers});
+      this.movies = response.data;
+      this.metadatas = response.data;
+      this.watchlistIds = response2.data.map(movie => movie.id);
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+  this.fetchGenres();
+},
 };
 </script>
 

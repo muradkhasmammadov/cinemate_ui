@@ -3,7 +3,10 @@
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
+    <div class="loader" v-if="isLoading">
+      <div class="spinner"></div>
+    </div>
+    <div class="container-fluid" v-else>
       <div class="logo-container">
         <a href="#" class="navbar-brand">
           <img src="https://www.clipartmax.com/png/middle/1-10021_clipart-movies-hd-movies-logo-transparent.png" class="logo" alt="CineMate" />
@@ -71,6 +74,7 @@ export default {
       isLoggedIn: false,
       userRole: null,
       user_id: '',
+      isLoading: true,
     };
   },
   created() {
@@ -100,6 +104,7 @@ export default {
       this.user_id = null;
       this.sub = null;
     }
+    this.isLoading = false;
   },
     Logout() {
       auth.logout();
@@ -125,6 +130,34 @@ export default {
 };
 </script>
 <style>
+.loader {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #555;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -156,6 +189,14 @@ export default {
   align-items: center;
   text-align: center;
 }
+
+.card-img-top {
+  width: 100%;
+  height: 100%!important;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
 
 footer {
   background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.purexbox.com/6c4ae5b99340c/imdb-tv-app-arrives-on-xbox-includes-thousands-of-free-movies.large.jpg');
