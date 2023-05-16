@@ -1,25 +1,25 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
+import jwt_decode from 'jwt-decode';
+import auth from '../auth';
+import HomeView from '../views/HomeView.vue';
+import Login from '../views/Login';
+import SignUp from '../views/SignUp.vue';
 import addReview from '../views/addReview.vue';
+import adminView from '../views/adminView.vue';
 import allReview from '../views/allReview.vue';
+import discovery from '../views/discovery';
 import metadata from '../views/metadata';
-import searchByParams from '../views/searchByParams';
 import searchByID from '../views/searchByID';
-import HomeView from "../views/HomeView.vue";
-import adminView from "../views/adminView.vue";
-import auth from "../auth";
-import SignUp from "../views/SignUp.vue"
-import Login from "../views/Login"
-import watchlist from "../views/watchlist"
-import discovery from "../views/discovery"
-import updateProfile from "../views/updateProfile"
-import jwt_decode from "jwt-decode";
+import searchByParams from '../views/searchByParams';
+import updateProfile from '../views/updateProfile';
+import watchlist from '../views/watchlist';
 
 function requireAuth(to, from, next) {
-  const token = localStorage.getItem("jwtToken");
+  const token = localStorage.getItem('jwtToken');
   if (!token) {
-    next({ path: "/auth/login" });
-    alert('You need login first!')
+    next({ path: '/auth/login' });
+    alert('You need login first!');
   } else {
     next();
   }
@@ -73,9 +73,8 @@ const routes = [
           if (decodedToken.role && decodedToken.role.includes('ADMIN')) {
             next(); // Proceed to the AllReviews component if the user is an admin
           } else {
-            this.$router.push("/navigator/search"); // Redirect to the homepage or any other page if the user is not an admin
-            alert("User is not admin");
-
+            this.$router.push('/navigator/search'); // Redirect to the homepage or any other page if the user is not an admin
+            alert('User is not admin');
           }
         } catch (error) {
           console.log('Invalid token', error);
@@ -208,7 +207,7 @@ const routes = [
     },
   },
   {
-    path: '/discovery',
+    path: '/discovery/:params',
     name: 'discovery',
     component: discovery,
     beforeEnter: (to, from, next) => {
@@ -235,20 +234,20 @@ const routes = [
     },
   },
   {
-    path: "/navigator/search",
-    name: "metadata",
+    path: '/navigator/search',
+    name: 'metadata',
     component: metadata,
     beforeEnter: requireAuth,
   },
   {
-    path: "/navigator/searchByParams/genre=:genreValue&info=custom_info",
-    name: "searchByParams",
+    path: '/navigator/searchByParams/genre=:genreValue&info=custom_info',
+    name: 'searchByParams',
     component: searchByParams,
     beforeEnter: requireAuth,
   },
   {
-    path: "/navigator/searchByIDs/:id",
-    name: "searchByID",
+    path: '/navigator/searchByIDs/:id',
+    name: 'searchByID',
     component: searchByID,
     beforeEnter: requireAuth,
   },
@@ -260,11 +259,9 @@ const routes = [
   },
 ];
 
-
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-
-export default router
+export default router;

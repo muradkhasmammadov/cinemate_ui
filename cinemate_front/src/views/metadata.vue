@@ -1,134 +1,140 @@
 <template>
-   <section class="movies-section">
-  <div class="container">
-    <h1>Explore Movies</h1>
+  <section class="movies-section">
+    <div class="container">
+      <h1>Explore Movies</h1>
       <div class="search-title">
-    <input type="text" v-model="searchInput" class="form-control" placeholder="Search movies">
-    <button type="button" @click="searchByInput" class="btn btn-default">
-      <i class="fa fa-search"></i>
-    </button>
-    </div> <br>
-    <div class="movies-grid">
-      <div class="row">
-        <div class="col-md-3 my-3" v-for="metadata in metadatas" :key="metadata.id">
-          <div class="card h-100">
-            <img :src="poster(metadata)" class="card-img-top" alt="Movie poster not found">
-            <div class="card-body">
-              <h5 class="card-title">{{ truncateTitle(metadata.title) }}</h5>
-              <h6 class="card-subtitle mb-2">{{ metadata.genre }}</h6>
-              <p class="card-text"> <i class="fa fa-star"></i> {{ metadata.rating }}</p>
-              <a :href=" '/navigator/searchByIDs/' + metadata.id ">
-                <button type="button" class="btn btn-read-more" v-if="!isAdmin()">Read More</button> 
-              </a><br>
+        <input type="text" v-model="searchInput" class="form-control" placeholder="Search movies" />
+        <button type="button" @click="searchByInput" class="btn btn-default">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+      <br />
+      <div class="movies-grid">
+        <div class="row">
+          <div class="col-md-3 my-3" v-for="metadata in metadatas" :key="metadata.id">
+            <div class="card h-100">
+              <span role="button" class="card-img-top">
+                <a :href="'/navigator/searchByIDs/' + metadata.id">
+                  <img :src="poster(metadata)" class="card-img-top" alt="Movie poster not found" />
+                </a>
+              </span>
+              <div class="card-body">
+                <a :href="'/navigator/searchByIDs/' + metadata.id">
+                  <h5 class="card-title">{{ truncateTitle(metadata.title) }}</h5>
+                  <h6 class="card-subtitle mb-2">{{ metadata.genre }}</h6>
+                  <p class="card-text"><i class="fa fa-star"></i> {{ metadata.rating }}</p>
+
+                  <button type="button" class="btn btn-read-more" v-if="!isAdmin()">Read More</button> </a
+                ><br />
                 <button type="button" class="btn btn-watchlist" @click="addToWatchlist(metadata.id)" v-if="!isInWatchlist(metadata.id) && !isAdmin()"><i class="fa fa-plus"></i> Watchlist</button>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">{{ metadata.director }}</li>
+              </ul>
             </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item"> {{metadata.director}} </li>
-            </ul>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 </template>
-
 
 <script>
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
 export default {
-  name: "AllMetada",
+  name: 'AllMetada',
   data() {
     return {
       metadatas: [],
       ids: '',
       movies: [],
       watchlistIds: [],
-      dates: [], 
-      ratings: [], 
+      dates: [],
+      ratings: [],
     };
   },
   methods: {
     fetchMetadatas() {
-    const query = this.$route.params.genreValue;
-    const url = query && query.info
-      ? `http://localhost:8081/navigator/searchByParams?genre=${query}&info=custom_info`
-      : 'http://localhost:8081/navigator/search';
+      const query = this.$route.params.genreValue;
+      const url = query && query.info ? `http://localhost:8081/navigator/searchByParams?genre=${query}&info=custom_info` : 'http://localhost:8081/navigator/search';
 
-    axios.get(url)
-      .then((response) => this.metadatas = response.data)
-      .catch((err) => console.log(err.message));
+      axios
+        .get(url)
+        .then((response) => (this.metadatas = response.data))
+        .catch((err) => console.log(err.message));
       // alert('An error occurred while adding the review. Please try again.');
-  },
+    },
 
-    truncateTitle(title){
+    truncateTitle(title) {
       return title.length > 20 ? title.slice(0, 20) + '...' : title;
     },
     poster(metadata) {
-      return metadata.poster === 'not found' ? 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/04174dbc-fe2f-4983-824a-6d80412e917e/de25zez-cffb25c6-278b-4c76-a63e-5a75b6b4892d.png/v1/fill/w_800,h_600,q_80,strp/404_not_found__20th_century_box_style__by_xxneojadenxx_de25zez-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwIiwicGF0aCI6IlwvZlwvMDQxNzRkYmMtZmUyZi00OTgzLTgyNGEtNmQ4MDQxMmU5MTdlXC9kZTI1emV6LWNmZmIyNWM2LTI3OGItNGM3Ni1hNjNlLTVhNzViNmI0ODkyZC5wbmciLCJ3aWR0aCI6Ijw9ODAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.GMT6ZFtK1otxk4cvLolKhpYrWievHzrf64y4N7sP8ZM' : metadata.poster;
+      return metadata.poster === 'not found'
+        ? 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/04174dbc-fe2f-4983-824a-6d80412e917e/de25zez-cffb25c6-278b-4c76-a63e-5a75b6b4892d.png/v1/fill/w_800,h_600,q_80,strp/404_not_found__20th_century_box_style__by_xxneojadenxx_de25zez-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjAwIiwicGF0aCI6IlwvZlwvMDQxNzRkYmMtZmUyZi00OTgzLTgyNGEtNmQ4MDQxMmU5MTdlXC9kZTI1emV6LWNmZmIyNWM2LTI3OGItNGM3Ni1hNjNlLTVhNzViNmI0ODkyZC5wbmciLCJ3aWR0aCI6Ijw9ODAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.GMT6ZFtK1otxk4cvLolKhpYrWievHzrf64y4N7sP8ZM'
+        : metadata.poster;
     },
-  async searchByInput() {
-    try {
-      const response = await axios.get(`http://localhost:8081/discovery/search/${this.searchInput},no,no,no,no,no,no,no,no`);
-      this.metadatas = response.data;
-    } catch (err) {
-      console.log(err.message);
-    }
-  },
-  async addToWatchlist(contentId) {
-          const token = localStorage.getItem("jwtToken");
-          const decodedToken = jwt_decode(token)
-          const userId = decodedToken.id; // Assuming you have stored the user's ID in localStorage
-          const sub = decodedToken.sub; // Assuming you have stored the user's ID in localStorage
-          console.log(decodedToken.id)
-          if (!token || !userId) {
-            this.$router.push("/auth/login");
-            return;
-          }
+    async searchByInput() {
+      try {
+        const response = await axios.get(`http://localhost:8081/discovery/search/${this.searchInput},no,no,no,no,no,no,no,no`);
+        this.metadatas = response.data;
+      } catch (err) {
+        console.log(err.message);
+      }
+    },
+    async addToWatchlist(contentId) {
+      const token = localStorage.getItem('jwtToken');
+      const decodedToken = jwt_decode(token);
+      const userId = decodedToken.id; // Assuming you have stored the user's ID in localStorage
+      const sub = decodedToken.sub; // Assuming you have stored the user's ID in localStorage
+      console.log(decodedToken.id);
+      if (!token || !userId) {
+        this.$router.push('/auth/login');
+        return;
+      }
 
-          const headers = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          };
+      const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      };
 
-          try {
-            axios.post(
-              `http://localhost:8081/watchlist/add`,
-              {
-                userId: sub,
-                contentId: contentId
-              },
-              { headers }
-            );
-            this.watchlistIds.push(contentId);
-          } catch (err) {
-            console.log(err.message);
-            // alert("An error occurred while adding the movie to the watchlist. Please try again.");
-          }
+      try {
+        axios.post(
+          `http://localhost:8081/watchlist/add`,
+          {
+            userId: sub,
+            contentId: contentId,
+          },
+          { headers }
+        );
+        this.watchlistIds.push(contentId);
+      } catch (err) {
+        console.log(err.message);
+        // alert("An error occurred while adding the movie to the watchlist. Please try again.");
+      }
     },
     isInWatchlist(contentId) {
-  if (!this.isLoggedIn) {
-    return false; 
-  }
-  return this.watchlistIds.includes(contentId);
-},
-  isAdmin() {
-    const token = localStorage.getItem("jwtToken");
-    if (token) {
-      const decodedToken = jwt_decode(token);
-      return decodedToken.role === "ADMIN";
-    }
-    return false;
-  },
+      if (!this.isLoggedIn) {
+        return false;
+      }
+      return this.watchlistIds.includes(contentId);
     },
+    isAdmin() {
+      const token = localStorage.getItem('jwtToken');
+      if (token) {
+        const decodedToken = jwt_decode(token);
+        return decodedToken.role === 'ADMIN';
+      }
+      return false;
+    },
+  },
   mounted() {
     this.fetchMetadatas();
-    console.log("mounted");
+    console.log('mounted');
   },
   async created() {
-    const token = localStorage.getItem("jwtToken");
+    const token = localStorage.getItem('jwtToken');
     if (token) {
       const decodedToken = jwt_decode(token);
       if (decodedToken.exp * 1000 > Date.now()) {
@@ -138,24 +144,22 @@ export default {
       }
     }
     if (this.isLoggedIn) {
-      const token = localStorage.getItem("jwtToken");
+      const token = localStorage.getItem('jwtToken');
       const headers = {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       };
       try {
-        const response = await axios.get(`http://localhost:8081/watchlist/get/${this.sub}`, {headers});
+        const response = await axios.get(`http://localhost:8081/watchlist/get/${this.sub}`, { headers });
         this.movies = response.data;
-        console.log(headers)
-        this.watchlistIds = response.data.map(movie => movie.id); 
-
+        console.log(headers);
+        this.watchlistIds = response.data.map((movie) => movie.id);
       } catch (err) {
         console.log(err.message);
       }
     }
   },
 };
-
 </script>
 
 <style>
@@ -164,7 +168,6 @@ body {
   margin: 0;
   padding: 0;
 }
-
 
 .container {
   max-width: 1200px;
@@ -175,14 +178,15 @@ body {
   background-color: #f0f0f0;
   padding: 40px 0;
 }
-.fa-star, .fa-plus{
+.fa-star,
+.fa-plus {
   color: #ffc107;
 }
-.search-title input{
+.search-title input {
   width: 90%;
   float: left;
 }
-.search-title i{
+.search-title i {
   float: right;
 }
 .movies-section h2 {
@@ -212,11 +216,10 @@ body {
 
 .card-img-top {
   width: 100%;
-  height: 100%!important;
+  height: 100% !important;
   object-fit: cover;
   border-radius: 5px;
 }
-
 
 .card-body {
   padding: 20px 0 0;
@@ -256,7 +259,7 @@ body {
 }
 
 .btn-read-more {
-  background-color: #5799ef!important;
+  background-color: #5799ef !important;
   width: 150px;
   border: 2px solid #111;
   color: #111;
@@ -269,19 +272,17 @@ body {
 }
 
 .btn-read-more:hover {
-  background: rgba(var(--ipt-on-baseAlt-rgb,"255,255,255"),var(--ipt-baseAlt-hover-opacity,.08));
-  color: #fff!important;
-  animation: .5s all;
+  background: rgba(var(--ipt-on-baseAlt-rgb, '255,255,255'), var(--ipt-baseAlt-hover-opacity, 0.08));
+  color: #fff !important;
+  animation: 0.5s all;
 }
 
-
 .footer {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),  url('https://images.purexbox.com/6c4ae5b99340c/imdb-tv-app-arrives-on-xbox-includes-thousands-of-free-movies.large.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.purexbox.com/6c4ae5b99340c/imdb-tv-app-arrives-on-xbox-includes-thousands-of-free-movies.large.jpg');
   background-size: cover;
   background-position: center center;
   color: white;
   padding: 40px 0;
-
 }
 
 .footer h4 {
@@ -317,6 +318,4 @@ body {
   text-align: center;
   font-size: 14px;
 }
-
-
 </style>

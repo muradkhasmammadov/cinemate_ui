@@ -59,7 +59,7 @@ export default {
   } catch (e) {
     console.log(e);
     console.log("error");
-    alert("User doesn't exist!");
+    alert("Username or password doesn't exist!");
   }
 },
   },

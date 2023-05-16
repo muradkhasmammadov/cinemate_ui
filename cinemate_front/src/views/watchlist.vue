@@ -4,6 +4,9 @@
     <div class="container">
       <div class="movies-grid">
         <div class="row">
+          <div v-if="movies.length == 0"  class="align-items-center">
+            <img src="https://quotefancy.com/media/wallpaper/3840x2160/7066035-Pat-Schmatz-Quote-There-s-nothing-in-here-but-empty.jpg" width="1000" height="400"/>
+          </div>
           <div class="col-md-3 my-3" v-for="movie in movies" :key="movie.id">
             <div class="card h-100">
               <img :src="poster(movie)" class="card-img-top" alt="Movie poster not found">
